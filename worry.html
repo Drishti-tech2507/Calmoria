@@ -26,6 +26,7 @@
       background-color: #d1c4e9;
       border-radius: 50%;
       animation: breathe 6s ease-in-out infinite;
+      margin: 0 auto 2rem auto;
     }
 
     @keyframes breathe {
@@ -68,12 +69,12 @@
   </header>
 
   <!-- Main Content -->
-  <main class="mt-20">
-    <div class="breath-circle mx-auto mb-8"></div>
+  <main class="mt-20 max-w-md mx-auto px-4">
+    <div class="breath-circle"></div>
     <h2 class="text-3xl font-semibold mb-4 calm-text">Inhale... Exhale... Let go of your worries</h2>
     <p class="text-lg mb-4">This is your calming space 🌸</p>
     <p class="text-xl font-bold text-purple-700">🧘‍♀️ Exercise 🧘‍♂️</p>
-    <ul class="mt-6 space-y-3 text-left max-w-md mx-auto text-lg">
+    <ul class="mt-6 space-y-3 text-left text-lg">
       <li>🌬️ Breathe in through your nose for 4 seconds</li>
       <li>💨 Hold your breath for 7 seconds</li>
       <li>🌊 Slowly exhale through your mouth for 8 seconds</li>
@@ -91,7 +92,6 @@
 
     function speakBreathingCycle(index = 0) {
       if (index >= breathingSteps.length) {
-        // pause 2 seconds before restarting cycle
         setTimeout(() => speakBreathingCycle(0), 2000);
         return;
       }
@@ -103,7 +103,7 @@
       utterance.volume = 1;
 
       const voices = speechSynthesis.getVoices();
-      const chosenVoice = voices.find(v => v.name.includes("Female") || v.name.includes("Google"));
+      const chosenVoice = voices.find(v => v.name.toLowerCase().includes("female") || v.name.toLowerCase().includes("google"));
       if (chosenVoice) utterance.voice = chosenVoice;
 
       utterance.onend = () => {
@@ -125,4 +125,5 @@
   </script>
 
 </body>
-</html
+</html>
+
