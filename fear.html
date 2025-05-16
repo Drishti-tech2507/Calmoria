@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Calmoria - Fear</title>
+  <title>Calmoria - Fear Relief</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
@@ -11,15 +11,19 @@
       font-family: 'Segoe UI', sans-serif;
       color: white;
       overflow: hidden;
+      margin: 0;
+      padding: 0;
     }
+
     .circle {
-      width: 160px;
-      height: 160px;
+      width: 180px;
+      height: 180px;
       background-color: rgba(255, 255, 255, 0.2);
       border-radius: 50%;
-      animation: pulse 5s infinite ease-in-out;
-      margin-bottom: 20px;
+      animation: pulse 6s ease-in-out infinite;
+      margin-bottom: 1.5rem;
     }
+
     @keyframes pulse {
       0%, 100% {
         transform: scale(1);
@@ -30,30 +34,66 @@
         opacity: 1;
       }
     }
+
+    .background-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.15;
+    }
+
+    .fade-text {
+      animation: fadeInOut 5s ease-in-out infinite;
+    }
+
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
   </style>
 </head>
-<body class="flex flex-col justify-center items-center min-h-screen text-center px-6">
-  <audio autoplay loop>
+<body class="flex flex-col justify-center items-center min-h-screen text-center px-6 relative">
+
+  <!-- Background Image -->
+  <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="calm waves" class="background-img" />
+
+  <!-- Background Music -->
+  <audio id="bg-music" autoplay loop>
     <source src="fear-153680.mp3" type="audio/mp3" />
     Your browser does not support the audio element.
   </audio>
 
-  <h1 class="text-4xl font-bold mb-4">Calm Your Fear</h1>
-  <div class="circle"></div>
-  <p class="text-xl animate-pulse">Inhale Confidence... Exhale Fear</p>
-  <p class="mt-6 text-sm max-w-md">You are safe. Focus on your breath and feel grounded. Let the fear pass like a cloud in the sky.</p>
+  <!-- Header -->
+  <header class="absolute top-0 left-0 w-full bg-white bg-opacity-10 py-4 px-6 shadow-sm">
+    <h1 class="text-2xl font-bold text-white">Calmoria - Fear Relief</h1>
+  </header>
 
+  <!-- Main Content -->
+  <main class="mt-24">
+    <div class="circle"></div>
+    <h2 class="text-3xl md:text-4xl font-semibold fade-text">Inhale Confidence... Exhale Fear 😌</h2>
+    <p class="mt-6 text-sm max-w-md mx-auto">You are safe. Let the fear pass like a cloud in the sky. Focus on your breath and feel grounded.</p>
+  </main>
+
+  <!-- AI Voice Trainer -->
   <script>
+    const bgMusic = document.getElementById("bg-music");
+    bgMusic.volume = 0.3;
+
     function speakSequence(texts, index = 0) {
       if (index >= texts.length) {
-        setTimeout(() => speakSequence(texts, 0), 1000); // loop with pause
+        setTimeout(() => speakSequence(texts, 0), 1500); // loop after a pause
         return;
       }
 
       const utterance = new SpeechSynthesisUtterance(texts[index].text);
       utterance.lang = 'en-US';
       utterance.pitch = 1.2;
-      utterance.rate = 0.6; // slow
+      utterance.rate = 0.6;
       utterance.volume = 1;
       const voices = speechSynthesis.getVoices();
       const chosenVoice = voices.find(v => v.name.includes("Female") || v.name.includes("Google"));
