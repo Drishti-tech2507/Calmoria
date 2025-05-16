@@ -15,11 +15,9 @@
       overflow: hidden;
       color: #2f3e46;
     }
-
     .fade-text {
       animation: fadeInOut 5s ease-in-out infinite;
     }
-
     .breath-circle {
       width: 200px;
       height: 200px;
@@ -28,18 +26,15 @@
       animation: breathe 7s ease-in-out infinite;
       margin: auto;
     }
-
     @keyframes breathe {
       0% { transform: scale(1); opacity: 0.7; }
       50% { transform: scale(1.4); opacity: 1; }
       100% { transform: scale(1); opacity: 0.7; }
     }
-
     @keyframes fadeInOut {
       0%, 100% { opacity: 0.3; }
       50% { opacity: 1; }
     }
-
     .background-img {
       position: absolute;
       top: 0;
@@ -87,63 +82,59 @@
   <script>
     const bgMusic = document.getElementById("bg-music");
     bgMusic.volume = 0.3;
-  
-    // Helper function to create utterances with custom delays
-    function speakSequence(texts, index = 0) {
+
+    const breathingTexts = [
+      { text: "BREATHE IN", delayAfter: 1200 },
+      { text: "1", delayAfter: 800 },
+      { text: "2", delayAfter: 800 },
+      { text: "3", delayAfter: 800 },
+      { text: "4", delayAfter: 800 },
+      { text: "5", delayAfter: 1500 },
+      { text: "BREATHE OUT", delayAfter: 1200 },
+      { text: "1", delayAfter: 800 },
+      { text: "2", delayAfter: 800 },
+      { text: "3", delayAfter: 800 },
+      { text: "4", delayAfter: 800 },
+      { text: "5", delayAfter: 1500 },
+    ];
+
+    function speakSequence(texts, voice, index = 0) {
       if (index >= texts.length) {
-        // Restart loop after all parts spoken
-        setTimeout(() => speakSequence(texts, 0), 1000);
+        setTimeout(() => speakSequence(texts, voice, 0), 1000);
         return;
       }
-  
+
       const utterance = new SpeechSynthesisUtterance(texts[index].text);
-      utterance.lang = 'en-US';
+      utterance.voice = voice;
+      utterance.lang = "en-US";
       utterance.pitch = 1.2;
-      utterance.rate = 0.6; // slow speech
+      utterance.rate = 0.6;
       utterance.volume = 1;
-      const voices = speechSynthesis.getVoices();
-      const femaleVoice = voices.find(voice => voice.name.includes("Female") || voice.name.includes("Google"));
-      if (femaleVoice) {
-        utterance.voice = femaleVoice;
-      }
-  
+
       utterance.onend = () => {
-        // Wait specified delay before next utterance
-        setTimeout(() => speakSequence(texts, index + 1), texts[index].delayAfter || 500);
+        setTimeout(() => speakSequence(texts, voice, index + 1), texts[index].delayAfter || 500);
       };
-  
+
       speechSynthesis.speak(utterance);
     }
-  
-    window.addEventListener("load", () => {
-      // Prepare the breathing sequence with texts and pauses (delayAfter in ms)
-      const breathingTexts = [
-        { text: "BREATHE IN", delayAfter: 1200 },
-        { text: "1", delayAfter: 800 },
-        { text: "2", delayAfter: 800 },
-        { text: "3", delayAfter: 800 },
-        { text: "4", delayAfter: 800 },
-        { text: "5", delayAfter: 1500 },
-        { text: "BREATHE OUT", delayAfter: 1200 },
-        { text: "1", delayAfter: 800 },
-        { text: "2", delayAfter: 800 },
-        { text: "3", delayAfter: 800 },
-        { text: "4", delayAfter: 800 },
-        { text: "5", delayAfter: 1500 },
-      ];
-  
-      // Wait for voices to load
-      if (speechSynthesis.getVoices().length > 0) {
-        // Small delay before starting voice
-        setTimeout(() => speakSequence(breathingTexts), 3000);
-      } else {
-        speechSynthesis.onvoiceschanged = () => {
-          setTimeout(() => speakSequence(breathingTexts), 3000);
-        };
-      }
-    });
+
+    function loadVoicesAndStart() {
+      const voices = speechSynthesis.getVoices();
+      const englishVoice = voices.find(v =>
+        v.lang.startsWith('en') &&
+        (v.name.includes("Google") || v.name.includes("Microsoft") || v.name.includes("Samantha"))
+      ) || voices[0];
+
+      setTimeout(() => speakSequence(breathingTexts, englishVoice), 3000);
+    }
+
+    // Ensure voices are loaded
+    if (speechSynthesis.getVoices().length > 0) {
+      loadVoicesAndStart();
+    } else {
+      speechSynthesis.onvoiceschanged = loadVoicesAndStart;
+    }
   </script>
-  
+
 </body>
 </html>
-
