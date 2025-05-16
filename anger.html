@@ -39,27 +39,18 @@
     Your browser does not support the audio element.
   </audio>
 
-  <!-- Page Title -->
   <h1 class="text-4xl font-bold mb-4">Let Go of Anger</h1>
-
-  <!-- Breathing Circle Animation -->
   <div class="circle"></div>
-
-  <!-- Instructions -->
   <p class="text-xl animate-pulse">Breathe In... Hold... Breathe Out</p>
-  <p class="mt-6 text-sm max-w-md">
-    Imagine all your anger melting away with each exhale. Focus on the warmth and let calmness flow through.
-  </p>
+  <p class="mt-6 text-sm max-w-md">Imagine all your anger melting away with each exhale. Focus on the warmth and let calmness flow through.</p>
 
   <script>
-    // Set audio volume lower
+    // Reduce background music volume
     const bgMusic = document.querySelector("audio");
     bgMusic.volume = 0.3;
 
-    // Breathing instruction sequence
     function speakSequence(texts, index = 0) {
       if (index >= texts.length) {
-        // Restart after a short delay
         setTimeout(() => speakSequence(texts, 0), 1000);
         return;
       }
@@ -71,8 +62,13 @@
       utterance.volume = 1;
 
       const voices = speechSynthesis.getVoices();
-      const englishVoices = voices.filter(voice => voice.lang.startsWith("en"));
-      utterance.voice = englishVoices[0] || voices[0];
+      const preferredVoices = voices.filter(
+        voice =>
+          voice.lang.startsWith("en") &&
+          (voice.name.includes("Google") || voice.name.includes("English") || voice.name.includes("US"))
+      );
+
+      utterance.voice = preferredVoices[0] || voices.find(v => v.lang.startsWith("en")) || voices[0];
 
       utterance.onend = () => {
         setTimeout(() => speakSequence(texts, index + 1), texts[index].delayAfter || 500);
@@ -81,21 +77,20 @@
       speechSynthesis.speak(utterance);
     }
 
-    // Trigger the sequence once voices are loaded
     window.addEventListener("load", () => {
       const breathingTexts = [
         { text: "BREATHE IN", delayAfter: 1200 },
-        { text: "one", delayAfter: 800 },
-        { text: "two", delayAfter: 800 },
-        { text: "three", delayAfter: 800 },
-        { text: "four", delayAfter: 800 },
-        { text: "five", delayAfter: 1500 },
+        { text: "1", delayAfter: 800 },
+        { text: "2", delayAfter: 800 },
+        { text: "3", delayAfter: 800 },
+        { text: "4", delayAfter: 800 },
+        { text: "5", delayAfter: 1500 },
         { text: "BREATHE OUT", delayAfter: 1200 },
-        { text: "one", delayAfter: 800 },
-        { text: "two", delayAfter: 800 },
-        { text: "three", delayAfter: 800 },
-        { text: "four", delayAfter: 800 },
-        { text: "five", delayAfter: 1500 },
+        { text: "1", delayAfter: 800 },
+        { text: "2", delayAfter: 800 },
+        { text: "3", delayAfter: 800 },
+        { text: "4", delayAfter: 800 },
+        { text: "5", delayAfter: 1500 },
       ];
 
       if (speechSynthesis.getVoices().length > 0) {
