@@ -33,24 +33,33 @@
   </style>
 </head>
 <body class="flex flex-col justify-center items-center min-h-screen text-center px-6">
+  <!-- Background Audio -->
   <audio autoplay loop>
     <source src="gentle-ambient-texture-for-mindfulness-332295.mp3" type="audio/mp3" />
     Your browser does not support the audio element.
   </audio>
 
+  <!-- Page Title -->
   <h1 class="text-4xl font-bold mb-4">Let Go of Anger</h1>
+
+  <!-- Breathing Circle Animation -->
   <div class="circle"></div>
+
+  <!-- Instructions -->
   <p class="text-xl animate-pulse">Breathe In... Hold... Breathe Out</p>
-  <p class="mt-6 text-sm max-w-md">Imagine all your anger melting away with each exhale. Focus on the warmth and let calmness flow through.</p>
+  <p class="mt-6 text-sm max-w-md">
+    Imagine all your anger melting away with each exhale. Focus on the warmth and let calmness flow through.
+  </p>
 
   <script>
-    // Reduce background music volume for better voice audibility
+    // Set audio volume lower
     const bgMusic = document.querySelector("audio");
     bgMusic.volume = 0.3;
 
+    // Breathing instruction sequence
     function speakSequence(texts, index = 0) {
       if (index >= texts.length) {
-        // Restart the breathing loop after a 1 second pause
+        // Restart after a short delay
         setTimeout(() => speakSequence(texts, 0), 1000);
         return;
       }
@@ -58,14 +67,12 @@
       const utterance = new SpeechSynthesisUtterance(texts[index].text);
       utterance.lang = 'en-US';
       utterance.pitch = 1.2;
-      utterance.rate = 0.6;  // slow speech
+      utterance.rate = 0.6;
       utterance.volume = 1;
+
       const voices = speechSynthesis.getVoices();
-      // Choose a female or default Google voice if available
-      const femaleVoice = voices.find(voice => voice.name.includes("Female") || voice.name.includes("Google"));
-      if (femaleVoice) {
-        utterance.voice = femaleVoice;
-      }
+      const englishVoices = voices.filter(voice => voice.lang.startsWith("en"));
+      utterance.voice = englishVoices[0] || voices[0];
 
       utterance.onend = () => {
         setTimeout(() => speakSequence(texts, index + 1), texts[index].delayAfter || 500);
@@ -74,6 +81,7 @@
       speechSynthesis.speak(utterance);
     }
 
+    // Trigger the sequence once voices are loaded
     window.addEventListener("load", () => {
       const breathingTexts = [
         { text: "BREATHE IN", delayAfter: 1200 },
