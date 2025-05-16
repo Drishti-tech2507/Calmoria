@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calmoria - Irritation Relief</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #ffe29f, #ffa99f);
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      color: #3b3b3b;
+    }
+
+    .fade-text {
+      animation: fadeInOut 6s ease-in-out infinite;
+    }
+
+    .pulse-circle {
+      width: 180px;
+      height: 180px;
+      background-color: #ffcccb;
+      border-radius: 50%;
+      animation: pulse 6s ease-in-out infinite;
+      margin: auto;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    .background-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.15;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-center h-screen text-center relative">
+
+  <!-- Background Image -->
+  <img src="https://images.unsplash.com/photo-1502086223501-7ea6ecd79368" alt="peaceful beach" class="background-img" />
+
+  <!-- Background Music -->
+  <audio autoplay loop>
+    <source src="gentle-ambient-texture-for-mindfulness-332295.mp3" type="audio/mp3" />
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Header -->
+  <header class="absolute top-0 left-0 w-full bg-white bg-opacity-90 py-4 px-6 shadow-md">
+    <h1 class="text-2xl font-bold text-red-500">Calmoria - Irritation Relief</h1>
+  </header>
+
+  <!-- Main Section -->
+  <main class="mt-24 px-4">
+    <div class="pulse-circle mb-6"></div>
+    <h2 class="text-3xl md:text-4xl font-bold fade-text">Breathe it out 🧘‍♂️</h2>
+    <p class="text-lg mt-4 mb-2">Here's a soothing way to handle irritation:</p>
+    <ul class="mt-4 space-y-2 text-left max-w-md mx-auto text-lg">
+      <li>🌬️ Take a slow deep breath in for 4 seconds</li>
+      <li>🫁 Hold it for 4 seconds</li>
+      <li>💨 Exhale for 6 seconds</li>
+      <li>🔁 Repeat this pattern for 5 rounds</li>
+      <li>🎧 Listen to the water and let go of tension</li>
+      <li>🌼 Whisper to yourself: “This too shall pass.”</li>
+    </ul>
+  </main>
+
+  <script>
+    // Lower volume of background music for voice clarity
+    const bgMusic = document.querySelector('audio');
+    if (bgMusic) bgMusic.volume = 0.3;
+
+    function speakSequence(texts, index = 0) {
+      if (index >= texts.length) {
+        setTimeout(() => speakSequence(texts, 0), 1000); // loop with pause
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(texts[index].text);
+      utterance.lang = 'en-US';
+      utterance.pitch = 1.2;
+      utterance.rate = 0.6; // slow
+      utterance.volume = 1;
+      const voices = speechSynthesis.getVoices();
+      const chosenVoice = voices.find(v => v.name.includes("Female") || v.name.includes("Google"));
+      if (chosenVoice) utterance.voice = chosenVoice;
+
+      utterance.onend = () => {
+        setTimeout(() => speakSequence(texts, index + 1), texts[index].delayAfter || 500);
+      };
+
+      speechSynthesis.speak(utterance);
+    }
+
+    window.addEventListener('load', () => {
+      const breathingTexts = [
+        { text: "BREATHE IN", delayAfter: 1200 },
+        { text: "1", delayAfter: 800 },
+        { text: "2", delayAfter: 800 },
+        { text: "3", delayAfter: 800 },
+        { text: "4", delayAfter: 800 },
+        { text: "HOLD", delayAfter: 1500 },
+        { text: "BREATHE OUT", delayAfter: 1200 },
+        { text: "1", delayAfter: 1000 },
+        { text: "2", delayAfter: 1000 },
+        { text: "3", delayAfter: 1000 },
+        { text: "4", delayAfter: 1000 },
+        { text: "5", delayAfter: 1500 }
+      ];
+
+      if (speechSynthesis.getVoices().length > 0) {
+        setTimeout(() => speakSequence(breathingTexts), 3000);
+      } else {
+        speechSynthesis.onvoiceschanged = () => {
+          setTimeout(() => speakSequence(breathingTexts), 3000);
+        };
+      }
+    });
+  </script>
+
+</body>
+</html>

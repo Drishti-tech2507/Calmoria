@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calmoria - Worry Relief</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to top right, #c1dfc4, #deecdd);
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      color: #333;
+    }
+
+    .calm-text {
+      animation: fadeIn 3s ease-in-out infinite alternate;
+    }
+
+    .breath-circle {
+      width: 200px;
+      height: 200px;
+      background-color: #d1c4e9;
+      border-radius: 50%;
+      animation: breathe 6s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+
+    .background-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.3;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-center h-screen text-center relative">
+
+  <!-- Background Image -->
+  <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" alt="peaceful" class="background-img" />
+
+  <!-- Audio -->
+  <audio autoplay loop>
+    <source src="background-music-soft-calm-336543.mp3" type="audio/mp3" />
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Header -->
+  <header class="absolute top-0 left-0 w-full bg-white bg-opacity-80 py-4 px-6 shadow-md">
+    <h1 class="text-2xl font-bold text-purple-600">Calmoria - Worry Relief</h1>
+  </header>
+
+  <!-- Main Content -->
+  <main class="mt-20">
+    <div class="breath-circle mx-auto mb-8"></div>
+    <h2 class="text-3xl font-semibold mb-4 calm-text">Inhale... Exhale... Let go of your worries</h2>
+    <p class="text-lg mb-4">This is your calming space 🌸</p>
+    <p class="text-xl font-bold text-purple-700">🧘‍♀️ Exercise 🧘‍♂️</p>
+    <ul class="mt-6 space-y-3 text-left max-w-md mx-auto text-lg">
+      <li>🌬️ Breathe in through your nose for 4 seconds</li>
+      <li>💨 Hold your breath for 7 seconds</li>
+      <li>🌊 Slowly exhale through your mouth for 8 seconds</li>
+      <li>🌱 Repeat for 3-5 cycles</li>
+      <li>📿 While breathing, silently say: "I am safe. I am calm. I let go."</li>
+    </ul>
+  </main>
+
+  <script>
+    const breathingSteps = [
+      { text: "Breathe in through your nose", duration: 4000 },
+      { text: "Hold your breath", duration: 7000 },
+      { text: "Slowly exhale through your mouth", duration: 8000 },
+    ];
+
+    function speakBreathingCycle(index = 0) {
+      if (index >= breathingSteps.length) {
+        // pause 2 seconds before restarting cycle
+        setTimeout(() => speakBreathingCycle(0), 2000);
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(breathingSteps[index].text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.7;
+      utterance.pitch = 1.1;
+      utterance.volume = 1;
+
+      const voices = speechSynthesis.getVoices();
+      const chosenVoice = voices.find(v => v.name.includes("Female") || v.name.includes("Google"));
+      if (chosenVoice) utterance.voice = chosenVoice;
+
+      utterance.onend = () => {
+        setTimeout(() => speakBreathingCycle(index + 1), breathingSteps[index].duration);
+      };
+
+      speechSynthesis.speak(utterance);
+    }
+
+    window.addEventListener('load', () => {
+      if (speechSynthesis.getVoices().length > 0) {
+        setTimeout(() => speakBreathingCycle(), 2000);
+      } else {
+        speechSynthesis.onvoiceschanged = () => {
+          setTimeout(() => speakBreathingCycle(), 2000);
+        };
+      }
+    });
+  </script>
+
+</body>
+</html

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ERQ Test | Calmoria</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: linear-gradient(to bottom, #fbd3e9, #bb377d);
+      color: #333;
+      overflow-x: hidden;
+    }
+    .fade-in {
+      animation: fadeIn 1s ease forwards;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    .bg-blur {
+      backdrop-filter: blur(10px);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center px-4">
+
+  <!-- Intro Section -->
+  <section id="intro" class="w-full max-w-3xl bg-white/80 p-10 rounded-2xl shadow-lg fade-in">
+    <h1 class="text-3xl font-bold text-center text-pink-600 mb-4">Emotion Regulation Questionnaire (ERQ)</h1>
+    <p class="text-gray-700 mb-6 text-lg text-center">
+      The ERQ assesses the typical use of two emotion regulation strategies: cognitive reappraisal and expressive suppression. This test helps you understand your emotional coping mechanisms.
+    </p>
+    <div class="flex justify-center">
+      <button onclick="startQuiz()" class="bg-pink-500 text-white px-6 py-3 rounded-full hover:bg-pink-600 transition">
+        Start Quiz →
+      </button>
+    </div>
+  </section>
+
+  <!-- Quiz Section -->
+  <section id="quiz" class="hidden w-full max-w-3xl bg-white/80 p-10 rounded-2xl shadow-lg fade-in">
+    <h2 class="text-2xl font-semibold text-pink-600 mb-4">ERQ Quiz</h2>
+
+    <div id="questionBox" class="text-gray-800 text-lg mb-6">
+      <!-- Dynamic Question Content -->
+    </div>
+
+    <div class="flex gap-4 mb-4">
+      <button onclick="submitAnswer(1)" class="bg-pink-400 text-white px-4 py-2 rounded-full">Agree</button>
+      <button onclick="submitAnswer(0)" class="bg-gray-300 px-4 py-2 rounded-full">Disagree</button>
+    </div>
+
+    <div class="w-full bg-gray-200 rounded-full h-3">
+      <div id="progressBar" class="bg-pink-500 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+    </div>
+  </section>
+
+  <!-- Result Section -->
+  <section id="result" class="hidden w-full max-w-2xl bg-white/80 p-10 rounded-2xl shadow-lg fade-in text-center relative">
+    <h2 class="text-2xl font-bold text-pink-600 mb-4">Your ERQ Result</h2>
+    <p id="resultMessage" class="text-lg text-gray-800 mb-6 whitespace-pre-line"></p>
+  
+    <div class="flex justify-center gap-4 mt-6">
+      <button onclick="restartQuiz()" class="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition">
+        Restart Quiz
+      </button>
+      <button onclick="goBack()" class="bg-gray-300 px-6 py-2 rounded-full hover:bg-gray-400 transition">
+        ← Back to Intro
+      </button>
+      <button onclick="goToDashboard()" class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition">
+        ⬅ Back to Dashboard
+      </button>
+    </div>
+  </section>
+
+  <!-- Floating Bot -->
+  <div class="fixed top-5 right-5 w-16 h-16 rounded-full shadow-lg flex items-center justify-center bg-white/90 animate-bounce">
+    🤖
+  </div>
+
+  <!-- Background Audio -->
+  <audio id="bgMusic" autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_cbe0ec3c87.mp3" type="audio/mpeg">
+  </audio>
+  <script>
+    const questions = [
+      "I control my emotions by changing the way I think.",
+      "I keep my emotions to myself.",
+      "I change how I think to feel better.",
+      "I control my feelings by not expressing them.",
+      "I reframe situations to reduce negative emotion.",
+      "I hide my feelings from others.",
+      "I change my thinking to cope with negative emotions.",
+      "I suppress emotions when in social situations.",
+      "I rethink situations to alter emotions.",
+      "I hold in feelings that I don’t want others to see."
+    ];
+  
+    let currentIndex = 0;
+    let score = 0;
+  
+    function startQuiz() {
+      document.getElementById("intro").classList.add("hidden");
+      document.getElementById("quiz").classList.remove("hidden");
+      showQuestion();
+    }
+  
+    function showQuestion() {
+      if (currentIndex < questions.length) {
+        document.getElementById("questionBox").innerText = questions[currentIndex];
+        document.getElementById("progressBar").style.width = `${(currentIndex / questions.length) * 100}%`;
+      } else {
+        showResult();
+      }
+    }
+  
+    function submitAnswer(value) {
+      score += value;
+      currentIndex++;
+      showQuestion();
+    }
+  
+    function showResult() {
+      document.getElementById("quiz").classList.add("hidden");
+      document.getElementById("result").classList.remove("hidden");
+  
+      const total = questions.length;
+      const percent = Math.round((score / total) * 100);
+      let message = "";
+  
+      if (percent >= 70) {
+        message = "🟢 You tend to use healthy emotion regulation strategies such as reappraisal. Great job!";
+      } else if (percent >= 40) {
+        message = "🟡 You show moderate emotion regulation ability. Consider improving your reappraisal strategies.";
+      } else {
+        message = "🔴 You may rely more on suppression. Practicing mindfulness and reappraisal techniques may help.";
+      }
+  
+      document.getElementById("resultMessage").innerText = `${message}\nYour score: ${percent}%`;
+  
+      // Store in localStorage with consistent keys
+      localStorage.setItem("emotion_result", `${percent} / 100`);
+      localStorage.setItem("emotion_suggestion", message);
+  
+      const retakeDate = new Date();
+      retakeDate.setDate(retakeDate.getDate() + 7);
+      localStorage.setItem("emotion_date", retakeDate.toISOString());
+    }
+  
+    function restartQuiz() {
+      currentIndex = 0;
+      score = 0;
+      document.getElementById("result").classList.add("hidden");
+      document.getElementById("intro").classList.remove("hidden");
+    }
+  
+    function goBack() {
+      currentIndex = 0;
+      score = 0;
+      document.getElementById("result").classList.add("hidden");
+      document.getElementById("intro").classList.remove("hidden");
+    }
+  
+    function goToDashboard() {
+      window.location.href = "dashboard.html"; // Adjust this if needed
+    }
+  </script>
+  
+</body>
+</html>
+

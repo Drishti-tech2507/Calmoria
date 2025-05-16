@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calmoria - Anger</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(to right, #f43f5e, #f59e0b);
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      overflow: hidden;
+    }
+    .circle {
+      width: 150px;
+      height: 150px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      animation: pulse 4s infinite ease-in-out;
+      margin-bottom: 20px;
+    }
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
+      50% {
+        transform: scale(1.5);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body class="flex flex-col justify-center items-center min-h-screen text-center px-6">
+  <audio autoplay loop>
+    <source src="gentle-ambient-texture-for-mindfulness-332295.mp3" type="audio/mp3" />
+    Your browser does not support the audio element.
+  </audio>
+
+  <h1 class="text-4xl font-bold mb-4">Let Go of Anger</h1>
+  <div class="circle"></div>
+  <p class="text-xl animate-pulse">Breathe In... Hold... Breathe Out</p>
+  <p class="mt-6 text-sm max-w-md">Imagine all your anger melting away with each exhale. Focus on the warmth and let calmness flow through.</p>
+
+  <script>
+    // Reduce background music volume for better voice audibility
+    const bgMusic = document.querySelector("audio");
+    bgMusic.volume = 0.3;
+
+    function speakSequence(texts, index = 0) {
+      if (index >= texts.length) {
+        // Restart the breathing loop after a 1 second pause
+        setTimeout(() => speakSequence(texts, 0), 1000);
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(texts[index].text);
+      utterance.lang = 'en-US';
+      utterance.pitch = 1.2;
+      utterance.rate = 0.6;  // slow speech
+      utterance.volume = 1;
+      const voices = speechSynthesis.getVoices();
+      // Choose a female or default Google voice if available
+      const femaleVoice = voices.find(voice => voice.name.includes("Female") || voice.name.includes("Google"));
+      if (femaleVoice) {
+        utterance.voice = femaleVoice;
+      }
+
+      utterance.onend = () => {
+        setTimeout(() => speakSequence(texts, index + 1), texts[index].delayAfter || 500);
+      };
+
+      speechSynthesis.speak(utterance);
+    }
+
+    window.addEventListener("load", () => {
+      const breathingTexts = [
+        { text: "BREATHE IN", delayAfter: 1200 },
+        { text: "1", delayAfter: 800 },
+        { text: "2", delayAfter: 800 },
+        { text: "3", delayAfter: 800 },
+        { text: "4", delayAfter: 800 },
+        { text: "5", delayAfter: 1500 },
+        { text: "BREATHE OUT", delayAfter: 1200 },
+        { text: "1", delayAfter: 800 },
+        { text: "2", delayAfter: 800 },
+        { text: "3", delayAfter: 800 },
+        { text: "4", delayAfter: 800 },
+        { text: "5", delayAfter: 1500 },
+      ];
+
+      if (speechSynthesis.getVoices().length > 0) {
+        setTimeout(() => speakSequence(breathingTexts), 3000);
+      } else {
+        speechSynthesis.onvoiceschanged = () => {
+          setTimeout(() => speakSequence(breathingTexts), 3000);
+        };
+      }
+    });
+  </script>
+</body>
+</html>

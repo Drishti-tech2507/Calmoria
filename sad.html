@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calmoria - Sadness Relief</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to top right, #a1c4fd, #c2e9fb);
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      color: #333;
+    }
+
+    .fade-in {
+      animation: fadeIn 4s ease-in-out infinite alternate;
+    }
+
+    .breath-circle {
+      width: 180px;
+      height: 180px;
+      background-color: #bbdefb;
+      border-radius: 50%;
+      animation: breathe 6s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+      0% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.7; }
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+
+    .background-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.25;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-center h-screen text-center relative">
+
+  <!-- Background Image -->
+  <img src="https://images.unsplash.com/photo-1525286116112-b59af11adad1" alt="calm background" class="background-img" />
+
+  <!-- Audio -->
+  <audio autoplay loop>
+    <source src="rain-whisper-calm-amp-relaxing-ambient-soundscape-318237.mp3" type="audio/mp3" />
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Header -->
+  <header class="absolute top-0 left-0 w-full bg-white bg-opacity-90 py-4 px-6 shadow-md">
+    <h1 class="text-2xl font-bold text-blue-600">Calmoria - Sadness Relief</h1>
+  </header>
+
+  <!-- Main Content -->
+  <main class="mt-20">
+    <div class="breath-circle mx-auto mb-6"></div>
+    <h2 class="text-2xl md:text-3xl font-semibold mb-4 fade-in">You are not alone. Breathe with me 💙</h2>
+    <p class="text-lg mb-5">Let the sadness flow away like water...</p>
+    <p class="text-xl font-bold text-blue-800">🌦️ Emotional Soothing Exercise</p>
+    <ul class="mt-6 space-y-3 text-left max-w-md mx-auto text-lg">
+      <li>💧 Find a quiet, safe space</li>
+      <li>🌬️ Inhale gently through your nose for 4 seconds</li>
+      <li>🫁 Hold your breath for 5 seconds</li>
+      <li>💨 Exhale slowly through your mouth for 6 seconds</li>
+      <li>📖 Repeat while whispering: “This feeling will pass.”</li>
+      <li>🌈 Optional: place your hand on your heart and say: “I am enough.”</li>
+    </ul>
+  </main>
+
+  <script>
+    const steps = [
+      { text: "Find a quiet, safe space", duration: 3000 },
+      { text: "Inhale gently through your nose", duration: 4000 },
+      { text: "Hold your breath", duration: 5000 },
+      { text: "Exhale slowly through your mouth", duration: 6000 },
+      { text: "Repeat while whispering: This feeling will pass.", duration: 5000 },
+      { text: "Optional: place your hand on your heart and say: I am enough.", duration: 5000 },
+    ];
+
+    function speakStep(i = 0) {
+      if (i >= steps.length) {
+        setTimeout(() => speakStep(0), 2000);
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(steps[i].text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.65;
+      utterance.pitch = 1;
+      utterance.volume = 1;
+
+      // Pick a calm female or Google voice if available
+      const voices = speechSynthesis.getVoices();
+      const voice = voices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('google'));
+      if (voice) utterance.voice = voice;
+
+      utterance.onend = () => {
+        setTimeout(() => speakStep(i + 1), steps[i].duration);
+      };
+
+      speechSynthesis.speak(utterance);
+    }
+
+    window.addEventListener('load', () => {
+      if (speechSynthesis.getVoices().length > 0) {
+        setTimeout(() => speakStep(), 2000);
+      } else {
+        speechSynthesis.onvoiceschanged = () => {
+          setTimeout(() => speakStep(), 2000);
+        };
+      }
+    });
+  </script>
+
+</body>
+</html>

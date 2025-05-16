@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calmoria</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&family=Roboto:wght@500&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: linear-gradient(to right, #f8cdda, #1d2b64);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .main-header {
+      width: 100%;
+      background: #fff;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 600;
+      color: #e89b9b;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    .nav-icon img {
+      width: 24px;
+      height: 24px;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .nav-icon:hover img {
+      transform: scale(1.2);
+    }
+
+    .nav-icon {
+      position: relative;
+      display: inline-block;
+    }
+
+    .nav-icon::after {
+      content: attr(data-label);
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #e89b9b;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .nav-icon:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(5px);
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 35px;
+      left: 0;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      padding: 10px;
+       /* For scrollbar */
+  max-height: 300px; /* adjust based on need */
+  overflow-y: auto;
+}
+
+.dropdown-menu li {
+  padding: 10px 20px;
+  white-space: nowrap;
+}
+
+.dropdown-menu li a {
+  text-decoration: none;
+  color: #333;
+  display: block;
+}
+
+.dropdown-menu li:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+/* Scrollbar styling */
+.dropdown-menu::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb {
+  background: #cbd6fb;
+  border-radius: 5px;
+}
+
+.dropdown-menu::-webkit-scrollbar-track {
+  background: #86b5fd;
+}
+
+
+    .login-btn {
+      padding: 8px 18px;
+      background: #e89b9b;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-left: 20px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .login-btn:hover {
+      background-color: #f8a6a6;
+    }
+
+    .quote-section {
+      margin: 60px 20px 40px;
+      font-size: 32px;
+      text-align: center;
+      font-style: italic;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 900px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .about-section {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 60px 40px;
+      max-width: 1000px;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+      margin: 40px auto;
+      text-align: center;
+    }
+
+    .about-section h2 {
+      font-size: 32px;
+      color: #f8a6a6;
+      margin-bottom: 20px;
+    }
+
+    .about-section p {
+      font-size: 18px;
+      color: #444;
+      line-height: 1.7;
+    }
+
+    .buttons-container {
+      margin-top: 30px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .action-btn {
+      padding: 14px 28px;
+      background-color: #e89b9b;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transition: background 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .action-btn:hover {
+      background-color: #f8a6a6;
+    }
+
+    .cards-container {
+      margin: 50px 0;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .card {
+      background: #fff;
+      width: 280px;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #e89bcb;
+      margin-bottom: 12px;
+    }
+
+    .card-description {
+      font-size: 16px;
+      color: #555;
+    }
+
+    footer {
+      width: 100%;
+      padding: 20px 0;
+      text-align: center;
+      background-color: #ffffffcc;
+      font-size: 14px;
+      color: #666;
+      margin-top: 60px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="main-header">
+    <div class="logo">Calmoria</div>
+    <nav>
+      <ul>
+        <li><a href="#" class="nav-icon" data-label="Home"><img src="https://img.icons8.com/ios-filled/50/2c7a7b/home.png" alt="Home"></a></li>
+        <li class="dropdown">
+          <a href="#" class="nav-icon" data-label="Mindful Test">
+            <img src="https://img.icons8.com/ios-filled/50/2c7a7b/brain.png" alt="Mindful Test">
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="awareness.html">Mindful Attention Awareness Scale (MAAS)</a></li>
+            <li><a href="facet.html">Five Facet Mindfulness Questionnaire (FFMQ)</a></li>
+            <li><a href="revised.html">Cognitive and Affective Mindfulness Scale-Revised (CAMS-R)</a></li>
+            <li><a href="scale.html">Difficulties in Emotion Regulation Scale (DERS)</a></li>
+            <li><a href="emotion.html">Emotion Regulation Questionnaire (ERQ)</a></li>
+            <li><a href="panas.html">Positive and Negative Affect Schedule (PANAS)</a></li>
+            <li><a href="stress.html">Perceived Stress Scale (PSS)</a></li>
+            <li><a href="beck.html">Beck Depression Inventory (BDI)</a></li>
+            <li><a href="disorder.html">Generalized Anxiety Disorder Scale (GAD-7)</a></li>
+            <li><a href="health.html">Patient Health Questionnaire (PHQ-9)</a></li>
+            <li><a href="compassion.html">Self-Compassion Scale (SCS)</a></li>
+            <li><a href="toronto.html">Toronto Alexithymia Scale (TAS-20)</a></li>
+            <li><a href="insight.html">Self-Reflection and Insight Scale (SRIS)</a></li>
+            <li><a href="mental.html">Warwick-Edinburgh Mental Well-being Scale (WEMWBS)</a></li>
+            <li><a href="being.html">WHO-5 Well-Being Index</a></li>
+            <!-- Other roles continue... -->
+          </ul>
+        </li>
+        <li>
+          <a href="suggestion.html" class="nav-icon" data-label="Suggestion" title="Suggestion">
+            <img src="https://img.icons8.com/ios-filled/50/2c7a7b/idea.png" alt="Suggestion">
+          </a>
+        </li>
+        <li>
+          <a href="growth.html" class="nav-icon" data-label="Growth" title="Growth">
+            <img src="https://img.icons8.com/ios-filled/50/2c7a7b/plant-under-sun.png" alt="Growth">
+          </a>
+        </li>
+        
+    </nav>
+    <div class="flex items-center space-x-4">
+      <span id="welcomeText" class="text-sm select-none"></span>
+      <div id="userInitial" class="w-8 h-8 rounded-full bg-pink-300 text-black flex items-center justify-center font-semibold select-none"></div>
+    </div>
+  </header>
+
+  <!-- Quote -->
+  <section class="quote-section">
+    "Healing is not linear, but every step forward matters."
+  </section>
+
+  <!-- About -->
+  <section class="about-section">
+    <h2>About Calmoria</h2>
+    <p>
+      Calmoria is a space for those seeking inner peace, mental clarity, and emotional wellness...
+    </p>
+    <div class="buttons-container">
+      <a href="signup.html" class="action-btn">Get Started→</a>
+    </div>
+  </section>
+
+  <!-- Cards -->
+  <section class="cards-container">
+    <div class="card">
+      <div class="card-title">Self-Awareness</div>
+      <div class="card-description">Understand your emotions better and build resilience.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Daily Mindfulness</div>
+      <div class="card-description">Practice mindful habits to nurture inner calm.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Positive Growth</div>
+      <div class="card-description">Set small goals for steady mental and emotional growth.</div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 Glitch_team | Designed for mental wellness and growth.
+  </footer>
+
+  <!-- Script -->
+  <script>
+    const name = localStorage.getItem("userName") || "User";
+    const initial = name.charAt(0).toUpperCase();
+    document.getElementById("welcomeText").textContent = `Welcome, ${name}`;
+    document.getElementById("userInitial").textContent = initial;
+  </script>
+</body>
+</html>

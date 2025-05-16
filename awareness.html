@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mindfulness Quiz - MAAS</title>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .quiz-container {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background-color: #7441c6;
+      color: white;
+      font-size: 16px;
+      margin: 10px 5px 0;
+      cursor: pointer;
+    }
+    .options button {
+      display: block;
+      margin: 10px auto;
+      background: #ececec;
+      color: #333;
+    }
+    .progress {
+      height: 10px;
+      width: 100%;
+      background: #ddd;
+      margin-top: 20px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background-color: #7441c6;
+      width: 0%;
+      transition: width 0.3s;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background ambient sound -->
+  <audio id="ambientAudio" autoplay loop>
+    <source src="https://cdn.pixabay.com/audio/2022/03/14/audio_5e62c0b44f.mp3" type="audio/mp3">
+    Your browser does not support the audio tag.
+  </audio>
+
+  <div class="quiz-container" id="quizBox">
+    <h2 id="question">Welcome to the MAAS Test!</h2>
+    <p id="instruction">Ready to check your mindfulness? Click below!</p>
+    <div class="options" id="options"></div>
+    <button id="startBtn">Start Quiz</button>
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const questions = [
+        "I could be experiencing some emotion and not be conscious of it until later.",
+        "I break or spill things because of carelessness, not paying attention, or thinking of something else.",
+        "I find it difficult to stay focused on what's happening in the present.",
+        "I tend to walk quickly to get where I'm going without paying attention to what I experience along the way.",
+        "I tend not to notice feelings of physical tension or discomfort until they really grab my attention.",
+        "I forget a person's name almost as soon as I've been told it for the first time.",
+        "It seems I am \"running on automatic\" without much awareness of what I'm doing.",
+        "I rush through activities without being really attentive to them.",
+        "I get so focused on the goal I want to achieve that I lose touch with what I'm doing right now to get there.",
+        "I do jobs or tasks automatically, without being aware of what I'm doing.",
+        "I find myself listening to someone with one ear, doing something else at the same time.",
+        "I go to places in a hurry without noticing what I see or hear along the way.",
+        "I find myself preoccupied with the future or the past.",
+        "I snack without being aware that I'm eating.",
+        "I drive places on 'automatic pilot' and then wonder why I went there."
+      ];
+
+      const choices = [
+        "Almost Always",
+        "Very Frequently",
+        "Somewhat Frequently",
+        "Somewhat Infrequently",
+        "Very Infrequently",
+        "Almost Never"
+      ];
+
+      const scores = [];
+      let index = 0;
+
+      const startBtn = document.getElementById("startBtn");
+      const questionEl = document.getElementById("question");
+      const instruction = document.getElementById("instruction");
+      const optionsDiv = document.getElementById("options");
+      const progressBar = document.getElementById("progressBar");
+
+      startBtn.addEventListener("click", () => {
+        startBtn.style.display = "none";
+        instruction.style.display = "none";
+        loadQuestion();
+      });
+
+      function loadQuestion() {
+        questionEl.textContent = `Q${index + 1}. ${questions[index]}`;
+        optionsDiv.innerHTML = "";
+
+        choices.forEach((choice, i) => {
+          const btn = document.createElement("button");
+          btn.textContent = choice;
+          btn.onclick = () => selectOption(i + 1);
+          optionsDiv.appendChild(btn);
+        });
+
+        progressBar.style.width = `${(index / questions.length) * 100}%`;
+      }
+
+      function selectOption(score) {
+        scores.push(score);
+        index++;
+
+        if (index < questions.length) {
+          loadQuestion();
+        } else {
+          showResult();
+        }
+      }
+
+      function showResult() {
+        const totalScore = scores.reduce((a, b) => a + b, 0);
+        const avg = (totalScore / scores.length).toFixed(2);
+
+        // Save to localStorage for history
+        const now = new Date();
+        const result = {
+          score: avg,
+          date: now.toLocaleDateString(),
+          time: now.toLocaleTimeString()
+        };
+
+        const history = JSON.parse(localStorage.getItem('maasResults')) || [];
+        history.push(result);
+        localStorage.setItem('maasResults', JSON.stringify(history));
+
+        // Determine feedback
+        let feedback = "";
+        if (avg <= 2) feedback = "Your mindfulness level may need attention.";
+        else if (avg <= 4) feedback = "You're moderately mindful. Keep practicing!";
+        else feedback = "Great! You're highly mindful and self-aware.";
+
+        // ✅ Save for Growth Page
+        localStorage.setItem("awareness_result", `${avg} / 6`);
+        localStorage.setItem("awareness_suggestion", feedback);
+        const retestDate = new Date();
+        retestDate.setDate(retestDate.getDate() + 7);
+        localStorage.setItem("awareness_date", retestDate.toISOString());
+
+        // Display results
+        questionEl.textContent = "Your MAAS Report";
+        optionsDiv.innerHTML = `
+          <h3>Average Score: ${avg} / 6</h3>
+          <p>${feedback}</p>
+        `;
+
+        const restartBtn = document.createElement("button");
+        restartBtn.textContent = "Restart Quiz";
+        restartBtn.onclick = () => location.reload();
+        optionsDiv.appendChild(restartBtn);
+
+        const backBtn = document.createElement("button");
+        backBtn.textContent = "Back";
+        backBtn.onclick = () => window.history.back();
+        optionsDiv.appendChild(backBtn);
+
+        const viewGrowthBtn = document.createElement("button");
+        viewGrowthBtn.textContent = "View Growth Page";
+        viewGrowthBtn.onclick = () => window.location.href = "growth.html";
+        optionsDiv.appendChild(viewGrowthBtn);
+
+        progressBar.style.width = `100%`;
+      }
+    });
+  </script>
+
+</body>
+</html>
+

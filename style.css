@@ -1,0 +1,68 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f0f4f8;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.hero {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: 
+    linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+    url('imag2.jpg') no-repeat center center/cover;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  color: #222; /* dark color for good readability */
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.start-button {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #e89b9b;
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  border-radius: 30px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.start-button:hover {
+  background-color: #e89b9b;
+  transform: scale(1.05);
+}
+
+footer {
+  text-align: center;
+  padding: 20px 10px;
+  background-color: #b08cb6;
+  color: white;
+  font-size: 14px;
+}
+
+footer nav a {
+  color: #d1f0ee;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+footer nav a:hover {
+  text-decoration: underline;
+}
+
+

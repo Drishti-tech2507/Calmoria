@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CAMS-R Test | Calmoria</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(to right top, #ffdde1, #ee9ca7);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 2rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      padding: 2rem;
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .question {
+      margin-bottom: 2rem;
+    }
+
+    .question p {
+      font-weight: 600;
+      font-size: 1.125rem;
+      margin-bottom: 0.75rem;
+      color: #333;
+    }
+
+    .options label {
+      display: block;
+      padding: 0.5rem 1rem;
+      margin-bottom: 0.5rem;
+      background-color: rgba(255,255,255,0.6);
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .options input:checked + label,
+    .options label:hover {
+      background-color: #f7caca;
+      font-weight: bold;
+    }
+
+    .submit-btn {
+      background: linear-gradient(to right, #fa709a, #fee140);
+      border: none;
+      color: #fff;
+      padding: 0.75rem 2rem;
+      border-radius: 9999px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .submit-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .result {
+      margin-top: 2rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #2c7a7b;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="max-w-4xl mx-auto py-12 px-6">
+    <div class="glass">
+      <h1 class="text-3xl text-center text-pink-600 font-semibold mb-4 flex flex-col items-center gap-2">
+        🧘‍♀️ CAMS-R Mindfulness Test
+        <span class="text-base text-gray-700 font-normal">Cognitive & Affective Mindfulness Scale – Revised</span>
+      </h1>
+
+      <!-- About Section -->
+      <div class="text-gray-800 text-base mb-8 leading-relaxed">
+        <p>
+          The <strong>CAMS-R</strong> is a widely recognized psychological tool designed to assess your current level of mindfulness.
+          It evaluates your awareness, attention, present-focused behavior, and ability to accept thoughts and emotions without judgment.
+        </p>
+        <p class="mt-3">
+          Please answer the following 12 questions honestly based on how often you experience each statement. There are no right or wrong answers — this test is a reflection tool to help you become more aware of your mental state.
+        </p>
+      </div>
+
+      <!-- Quiz Form -->
+      <form id="camsrForm">
+        <div id="questionsContainer"></div>
+        <div class="flex justify-center">
+          <button type="submit" class="submit-btn mt-6">Get My Score</button>
+        </div>
+      </form>
+
+      <!-- Result Section -->
+      <div id="result" class="result"></div>
+
+      <!-- Back to Dashboard -->
+      <div class="flex justify-center mt-6">
+        <a href="dashboard.html" class="submit-btn bg-gradient-to-r from-teal-400 to-blue-500 text-white">
+          ⬅️ Back to Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      "I am able to accept the thoughts and feelings I have.",
+      "I can usually describe how I feel at the moment in considerable detail.",
+      "I am easily distracted.",
+      "I am aware of thoughts I’m having when my mood changes.",
+      "I am able to focus on the present moment.",
+      "It’s easy for me to keep track of my thoughts and feelings.",
+      "I am able to pay close attention to one thing for a long period of time.",
+      "I can usually describe how I feel at the moment with considerable precision.",
+      "I am able to bring my attention back to the present moment when distracted.",
+      "I am aware of my emotions as they arise.",
+      "I try to understand the meaning of my thoughts.",
+      "I am open to receiving unpleasant experiences."
+    ];
+  
+    const container = document.getElementById('questionsContainer');
+  
+    // Generate question elements dynamically
+    questions.forEach((question, index) => {
+      const qDiv = document.createElement('div');
+      qDiv.classList.add('question');
+      qDiv.innerHTML = `
+        <p>${index + 1}. ${question}</p>
+        <div class="options">
+          <label><input type="radio" name="q${index}" value="1" required class="hidden peer"><span class="peer-checked:font-bold">Rarely</span></label>
+          <label><input type="radio" name="q${index}" value="2" required class="hidden peer"><span class="peer-checked:font-bold">Sometimes</span></label>
+          <label><input type="radio" name="q${index}" value="3" required class="hidden peer"><span class="peer-checked:font-bold">Often</span></label>
+          <label><input type="radio" name="q${index}" value="4" required class="hidden peer"><span class="peer-checked:font-bold">Almost Always</span></label>
+        </div>
+      `;
+      container.appendChild(qDiv);
+    });
+  
+    // Handle form submission
+    document.getElementById('camsrForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+  
+      let totalScore = 0;
+      for (let i = 0; i < questions.length; i++) {
+        const answer = document.querySelector(`input[name="q${i}"]:checked`);
+        if (answer) {
+          totalScore += parseInt(answer.value);
+        }
+      }
+  
+      const average = (totalScore / questions.length).toFixed(2);
+      let message = "";
+  
+      if (average >= 3.5) {
+        message = "🌟 Your mindfulness level is <strong>high</strong> – you have strong awareness and emotional regulation.";
+      } else if (average >= 2.5) {
+        message = "🔄 Your mindfulness level is <strong>moderate</strong> – you're on the right path, keep growing.";
+      } else {
+        message = "🌧️ Your mindfulness level is <strong>low</strong> – try integrating simple mindfulness routines into your day.";
+      }
+  
+      // Display result
+      document.getElementById('result').innerHTML = `<p>Average Score: ${average}<br>${message}</p>`;
+  
+      // Save results to localStorage (revised version)
+      localStorage.setItem("revised_result", `${average} / 4`);
+      localStorage.setItem("revised_suggestion", message);
+  
+      // Set next test date
+      const retestDate = new Date();
+      retestDate.setDate(retestDate.getDate() + 7);
+      localStorage.setItem("revised_date", retestDate.toISOString());
+    });
+  </script>
+  
+</body>
+</html>

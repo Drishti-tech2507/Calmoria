@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calmoria - Suggestions</title>
+  <script>
+    // Tailwind config with extended animation - must run before tailwind CSS loads
+    window.tailwind = {
+      config: {
+        theme: {
+          extend: {
+            animation: {
+              fadeIn: "fadeIn 0.5s ease-in-out",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": { opacity: 0, transform: "scale(0.95)" },
+                "100%": { opacity: 1, transform: "scale(1)" },
+              }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css" />
+  <style>
+    body {
+      background: linear-gradient(to right, #f8cdda, #1d2b64);
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    audio::-webkit-media-controls-panel {
+      background-color: #e382c1;
+    }
+    .card-content {
+      transition: all 0.4s ease;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<header class="py-5 px-6 shadow-lg bg-white">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <h1 class="text-3xl font-bold text-pink-400">Calmoria</h1>
+  </div>
+</header>
+
+<audio autoplay loop class="hidden">
+  <source src="calming-ambient-for-serenity-332230.mp3" type="audio/mp3" />
+</audio>
+
+<main class="flex-grow px-4 py-10 max-w-4xl mx-auto">
+  <h2 class="text-2xl md:text-4xl font-bold text-center mb-6">What do you want to reduce?</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+    <!-- Card Template -->
+    <div onclick="window.location.href='anxiety.html'" class="emotion-card bg-indigo-300 bg-opacity-30 p-6 rounded-2xl shadow-xl flex flex-col items-center text-center cursor-pointer transition-all duration-300 hover:scale-105">
+      <img src="image copy 2.png" class="w-20 h-20 mb-4" alt="Anxiety" />
+      <h3 class="text-xl font-semibold">Anxiety</h3>
+      <p class="text-sm">2 min</p>
+      <div class="card-content hidden mt-4 text-sm text-white"></div>
+    </div>
+
+    <div onclick="window.location.href='anger.html'" class="emotion-card bg-red-300 bg-opacity-30 p-6 rounded-2xl shadow-xl flex flex-col items-center text-center cursor-pointer transition-all duration-300 hover:scale-105">
+      <img src="image copy 3.png" class="w-20 h-20 mb-4" alt="Anger" />
+      <h3 class="text-xl font-semibold">Anger</h3>
+      <p class="text-sm">3 min</p>
+      <div class="card-content hidden mt-4 text-sm text-white"></div>
+    </div>
+
+    <div onclick="window.location.href='irritate.html'" class="emotion-card bg-yellow-300 bg-opacity-30 p-6 rounded-2xl shadow-xl flex flex-col items-center text-center cursor-pointer transition-all duration-300 hover:scale-105">
+      <img src="image copy 8.png" class="w-20 h-20 mb-4" alt="Irritation" />
+      <h3 class="text-xl font-semibold">Irritation</h3>
+      <p class="text-sm">3 min</p>
+      <div class="card-content hidden mt-4 text-sm text-white"></div>
+    </div>
+
+    <div onclick="window.location.href='sad.html'" class="emotion-card bg-blue-300 bg-opacity-30 p-6 rounded-2xl shadow-xl flex flex-col items-center text-center cursor-pointer transition-all duration-300 hover:scale-105">
+      <img src="image copy 5.png" class="w-20 h-20 mb-4" alt="Sadness" />
+      <h3 class="text-xl font-semibold">Sadness</h3>
+      <p class="text-sm">3 min</p>
+      <div class="card-content hidden mt-4 text-sm text-white"></div>
+    </div>
+
+    <div onclick="window.location.href='fear.html'" class="emotion-card bg-green-400 bg-opacity-30 p-6 rounded-2xl shadow-xl flex flex-col items-center text-center cursor-pointer transition-all duration-300 hover:scale-105">
+      <img src="image copy 6.png" class="w-20 h-20 mb-4" alt="Fear" />
+      <h3 class="text-xl font-semibold">Fear</h3>
+      <p class="text-sm">3 min</p>
+      <div class="card-content hidden mt-4 text-sm text-white"></div>
+    </div>
+
+    <div onclick="window.location.href='worry.html'" class="emotion-card bg-purple-200 bg-opacity-30 p-6 rounded-2xl shadow-xl flex flex-col items-center text-center cursor-pointer transition-all duration-300 hover:scale-105">
+      <img src="image copy 7.png" class="w-20 h-20 mb-4" alt="Worry" />
+      <h3 class="text-xl font-semibold">Worry</h3>
+      <p class="text-sm">4 min</p>
+      <div class="card-content hidden mt-4 text-sm text-white"></div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="bg-gray-100 border-t mt-12 py-6">
+  <div class="max-w-6xl mx-auto text-center text-sm text-gray-600">
+    <p class="mb-2">© 2025 Glitch. All Rights Reserved.</p>
+    <nav>
+      <a href="dashboard.html" class="hover:underline">About</a> |
+      <a href="#" class="hover:underline">Privacy</a> |
+      <a href="contact.html" class="hover:underline">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  function toggleCard(card) {
+    const content = card.querySelector(".card-content");
+    const isVisible = !content.classList.contains("hidden");
+    document.querySelectorAll(".card-content").forEach(el => el.classList.add("hidden"));
+    if (!isVisible) {
+      content.classList.remove("hidden");
+      content.classList.add("animate-fadeIn");
+    }
+  }
+</script>
+
+</body>
+</html>
+

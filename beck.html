@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Beck Depression Inventory</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    .question-container:hover {
+      transform: scale(1.02);
+      transition: transform 0.3s ease-in-out;
+    }
+    .answer-btn:hover {
+      background-color: #d1d5db;
+    }
+    #bot {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 220px;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-green-200 via-blue-200 to-indigo-200 min-h-screen flex flex-col items-center p-6">
+
+  <!-- Bot Message -->
+  <div id="bot" class="text-center bg-white rounded-xl shadow-xl p-4">
+    <img src="image12.jpg" alt="Bot" class="w-20 h-20 mx-auto rounded-full mb-2" />
+    <p class="text-sm font-semibold text-gray-700">Hey there! Ready to begin the <span class="text-blue-600 font-bold">Beck Test</span>?</p>
+  </div>
+
+  <!-- Test Container -->
+  <div class="bg-white mt-32 p-8 rounded-2xl shadow-2xl w-full max-w-4xl">
+    <h1 class="text-4xl font-extrabold text-center text-blue-800 mb-6">Beck Depression Inventory (BDI)</h1>
+    <div id="test-container">
+      <div id="question-container" class="mb-6"></div>
+
+      <!-- Progress Bar -->
+      <div class="mb-6">
+        <div class="flex justify-between mb-1 text-sm font-medium text-blue-700">
+          <span>Progress</span>
+          <span id="progress-text">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+          <div id="progress-bar" class="bg-gradient-to-r from-blue-400 to-purple-500 h-2.5 rounded-full w-0 transition-all duration-500"></div>
+        </div>
+      </div>
+
+      <!-- Navigation Button -->
+      <div class="text-right">
+        <button id="next-btn" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-xl text-sm font-medium">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final Result Modal -->
+  <div id="final-result-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div class="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full text-center">
+      <h2 class="text-2xl font-bold mb-4 text-blue-700">📊 Your Depression Score</h2>
+      <p id="result-text" class="text-lg mb-4">Loading...</p>
+      <div class="flex justify-center gap-2 flex-wrap">
+        <button id="retry-btn" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Try Again</button>
+        <button id="dashboard-btn" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">Dashboard</button>
+        <button id="growth-btn" class="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600">View Growth Page</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      { question: "I do not feel sad.", answers: ["I feel sad", "I am sad all the time", "I am so sad I can't stand it"] },
+      { question: "I am not discouraged about my future.", answers: ["I feel more discouraged than I used to", "I don’t expect things to work out", "I feel my future is hopeless"] },
+      { question: "I don’t feel like a failure.", answers: ["I feel I have failed more than most people", "I see myself as a failure", "I feel like a complete failure"] },
+      { question: "I get as much satisfaction out of things as I used to.", answers: ["I don’t enjoy things as much now", "I get very little pleasure from things", "I can’t enjoy anything anymore"] },
+      { question: "I don’t feel guilty.", answers: ["I often feel guilty", "I feel guilty most of the time", "I feel guilty all the time"] },
+      { question: "I don’t feel I am being punished.", answers: ["I feel I may be punished", "I expect to be punished", "I feel I am being punished"] },
+      { question: "I feel I am as good as other people.", answers: ["I criticize myself", "I blame myself for everything", "I feel I’m worthless"] },
+      { question: "I don’t have suicidal thoughts.", answers: ["I have thoughts of dying", "I would be better off dead", "I would kill myself if I could"] }
+    ];
+
+    let currentIndex = 0;
+    const userAnswers = [];
+    const total = questions.length;
+
+    const questionContainer = document.getElementById("question-container");
+    const progressBar = document.getElementById("progress-bar");
+    const progressText = document.getElementById("progress-text");
+
+    function loadQuestion() {
+      const q = questions[currentIndex];
+      questionContainer.innerHTML = `
+        <div class="question-container transition-all">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">${q.question}</h2>
+          <div class="grid gap-3">
+            ${q.answers.map((ans, i) => `
+              <button class="answer-btn bg-gray-100 py-3 px-4 rounded-lg text-left text-gray-700" data-index="${i + 1}">${ans}</button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      document.querySelectorAll(".answer-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const selected = parseInt(btn.getAttribute("data-index"));
+          userAnswers.push(selected);
+          currentIndex++;
+          if (currentIndex < total) {
+            updateProgress();
+            loadQuestion();
+          } else {
+            showResult();
+          }
+        });
+      });
+    }
+
+    function updateProgress() {
+      const percent = (currentIndex / total) * 100;
+      progressBar.style.width = `${percent}%`;
+      progressText.textContent = `${Math.round(percent)}%`;
+    }
+
+    function calculateScore() {
+      return userAnswers.reduce((sum, val) => sum + val, 0);
+    }
+
+    function showResult() {
+      const score = calculateScore();
+      const totalScore = total * 3;
+      let message = "";
+
+      if (score <= 10) {
+        message = "🙂 Minimal depression";
+      } else if (score <= 16) {
+        message = "😐 Mild depression";
+      } else if (score <= 23) {
+        message = "😟 Moderate depression";
+      } else {
+        message = "😢 Severe depression — please seek help.";
+      }
+
+      // Save to localStorage
+      localStorage.setItem("beck_result", score);
+      localStorage.setItem("beck_suggestion", message);
+      const retestDate = new Date();
+      retestDate.setDate(retestDate.getDate() + 7);
+      localStorage.setItem("beck_date", retestDate.toISOString());
+
+      document.getElementById("result-text").innerHTML = `
+        <strong class="text-blue-700 text-xl">Score: ${score} / ${totalScore}</strong><br>
+        <span class="text-gray-700 text-lg">${message}</span>
+      `;
+      document.getElementById("final-result-modal").classList.remove("hidden");
+    }
+
+    // Button handlers
+    document.getElementById("retry-btn").addEventListener("click", () => {
+      currentIndex = 0;
+      userAnswers.length = 0;
+      document.getElementById("final-result-modal").classList.add("hidden");
+      loadQuestion();
+      updateProgress();
+    });
+
+    document.getElementById("dashboard-btn").addEventListener("click", () => {
+      window.location.href = "dashboard.html";
+    });
+
+    document.getElementById("growth-btn").addEventListener("click", () => {
+      window.location.href = "growth.html";
+    });
+
+    // Initialize
+    loadQuestion();
+  </script>
+</body>
+</html>

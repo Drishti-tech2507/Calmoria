@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GAD-7 Anxiety Test</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, #f0f4ff, #fef9ff);
+    }
+    .question-container:hover {
+      transform: scale(1.02);
+      transition: transform 0.3s ease-in-out;
+    }
+    .answer-btn:hover {
+      background-color: #dbeafe;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-6">
+
+  <!-- Test Container -->
+  <div class="bg-white mt-10 p-8 rounded-2xl shadow-xl w-full max-w-4xl">
+    <h1 class="text-4xl font-extrabold text-center text-blue-800 mb-6">GAD-7 Anxiety Test</h1>
+    <div id="test-container">
+      <div id="question-container" class="mb-6"></div>
+
+      <!-- Progress Bar -->
+      <div class="mb-6">
+        <div class="flex justify-between mb-1 text-sm font-medium text-blue-700">
+          <span>Progress</span>
+          <span id="progress-text">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+          <div id="progress-bar" class="bg-blue-500 h-2.5 rounded-full w-0 transition-all duration-500"></div>
+        </div>
+      </div>
+
+      <!-- Navigation Button -->
+      <div class="text-right">
+        <button id="next-btn" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-xl text-sm font-medium">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final Result Modal -->
+  <div id="final-result-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div class="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full text-center">
+      <h2 class="text-2xl font-bold mb-4 text-blue-700">🧠 Your Anxiety Score</h2>
+      <p id="result-text" class="text-lg mb-4 text-gray-800"></p>
+      <div class="flex justify-center gap-3 flex-wrap">
+        <button id="retry-btn" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Retest</button>
+        <button id="dashboard-btn" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">Back to Dashboard</button>
+        <button id="growth-btn" class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700">Go to Growth Page</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      { question: "Feeling nervous, anxious, or on edge", answers: ["Not at all", "Several days", "More than half the days", "Nearly every day"] },
+      { question: "Not being able to stop or control worrying", answers: ["Not at all", "Several days", "More than half the days", "Nearly every day"] },
+      { question: "Worrying too much about different things", answers: ["Not at all", "Several days", "More than half the days", "Nearly every day"] },
+      { question: "Trouble relaxing", answers: ["Not at all", "Several days", "More than half the days", "Nearly every day"] },
+      { question: "Being so restless that it's hard to sit still", answers: ["Not at all", "Several days", "More than half the days", "Nearly every day"] },
+      { question: "Becoming easily annoyed or irritable", answers: ["Not at all", "Several days", "More than half the days", "Nearly every day"] },
+      { question: "Feeling afraid as if something awful might happen", answers: ["Not at all", "Several days", "More than half the days", "Nearly every day"] },
+    ];
+
+    let currentIndex = 0;
+    const userAnswers = [];
+    const total = questions.length;
+
+    const questionContainer = document.getElementById("question-container");
+    const progressBar = document.getElementById("progress-bar");
+    const progressText = document.getElementById("progress-text");
+
+    function loadQuestion() {
+      const q = questions[currentIndex];
+      questionContainer.innerHTML = `
+        <div class="question-container transition-all">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">${q.question}</h2>
+          <div class="grid gap-3">
+            ${q.answers.map((ans, i) => `
+              <button class="answer-btn bg-gray-100 py-3 px-4 rounded-lg text-left text-gray-700 w-full" data-index="${i}">${ans}</button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      document.querySelectorAll(".answer-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const selected = parseInt(btn.getAttribute("data-index"));
+          userAnswers.push(selected);
+          currentIndex++;
+          if (currentIndex < total) {
+            updateProgress();
+            loadQuestion();
+          } else {
+            showResult();
+          }
+        });
+      });
+    }
+
+    function updateProgress() {
+      const percent = (currentIndex / total) * 100;
+      progressBar.style.width = `${percent}%`;
+      progressText.textContent = `${Math.round(percent)}%`;
+    }
+
+    function calculateScore() {
+      return userAnswers.reduce((sum, val) => sum + val, 0);
+    }
+
+    function getSuggestion(score) {
+      if (score <= 4) return "Minimal anxiety";
+      if (score <= 9) return "Mild anxiety";
+      if (score <= 14) return "Moderate anxiety";
+      return "Severe anxiety — consider seeking professional help.";
+    }
+
+    function showResult() {
+      const score = calculateScore();
+      const suggestion = getSuggestion(score);
+      const retestDate = new Date();
+      retestDate.setDate(retestDate.getDate() + 7);
+
+      // Save to localStorage
+      localStorage.setItem("disorder_result", score);
+      localStorage.setItem("disorder_suggestion", suggestion);
+      localStorage.setItem("disorder_date", retestDate.toISOString());
+
+      document.getElementById("result-text").innerHTML = `
+        <strong class="text-blue-700 text-xl">Score: ${score} / 21</strong><br>
+        <span class="text-gray-600">${suggestion}</span>
+      `;
+      document.getElementById("final-result-modal").classList.remove("hidden");
+    }
+
+    // Button Handlers
+    document.getElementById("retry-btn").addEventListener("click", () => {
+      currentIndex = 0;
+      userAnswers.length = 0;
+      document.getElementById("final-result-modal").classList.add("hidden");
+      loadQuestion();
+      updateProgress();
+    });
+
+    document.getElementById("dashboard-btn").addEventListener("click", () => {
+      window.location.href = "dashboard.html";
+    });
+
+    document.getElementById("growth-btn").addEventListener("click", () => {
+      window.location.href = "growth.html";
+    });
+
+    // Initialize
+    loadQuestion();
+  </script>
+</body>
+</html>
+

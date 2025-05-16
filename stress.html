@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PSS Test</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <style>
+    .question-container:hover {
+      transform: scale(1.03);
+      transition: transform 0.3s ease-in-out;
+    }
+    .answer-btn:hover {
+      background-color: #fbb6ce;
+      color: #111;
+    }
+    #bot {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 220px;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-indigo-200 via-purple-300 to-pink-200 min-h-screen flex flex-col items-center p-6">
+
+  <!-- Bot Message -->
+  <div id="bot" class="text-center bg-white rounded-xl shadow-xl p-4">
+    <img src="image.png" alt="Bot" class="w-20 h-20 mx-auto rounded-full mb-2" />
+    <p class="text-sm font-semibold text-gray-700">Hello! Ready to take the <span class="text-pink-600 font-bold">Unique PSS Test</span>?</p>
+  </div>
+
+  <!-- Main Test Container -->
+  <div class="bg-white mt-32 p-8 rounded-2xl shadow-2xl w-full max-w-4xl">
+    <h1 class="text-4xl font-extrabold text-center text-indigo-800 mb-6">Perceived Stress Scale (PSS) Test</h1>
+    <div id="test-container">
+      <div id="question-container" class="mb-6"></div>
+
+      <!-- Progress Bar -->
+      <div class="mb-6">
+        <div class="flex justify-between mb-1 text-sm font-medium text-indigo-700">
+          <span>Progress</span>
+          <span id="progress-text">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+          <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-yellow-400 h-2.5 rounded-full w-0 transition-all duration-500"></div>
+        </div>
+      </div>
+
+      <!-- Navigation Button -->
+      <div class="text-right">
+        <button id="next-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-6 rounded-xl text-sm font-medium">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final Result Modal -->
+  <div id="final-result-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div class="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full text-center">
+      <h2 class="text-2xl font-bold mb-4 text-indigo-700">🧠 Your Stress Score</h2>
+      <p id="result-text" class="text-lg mb-4">Loading...</p>
+      <div id="options-div" class="flex flex-wrap justify-center gap-2">
+        <button id="retry-btn" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Try Again</button>
+        <button id="dashboard-btn" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">Dashboard</button>
+        <button id="growth-btn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">View Growth Page</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      { question: "How often have you felt overwhelmed by responsibilities lately?", answers: ["Never", "Rarely", "Sometimes", "Often", "Always"] },
+      { question: "Have you had trouble sleeping due to worry or anxiety?", answers: ["Never", "Rarely", "Sometimes", "Often", "Always"] },
+      { question: "How often do you feel you're not coping well with daily tasks?", answers: ["Never", "Rarely", "Sometimes", "Often", "Always"] },
+      { question: "Do you find it hard to control your emotions during stress?", answers: ["Never", "Rarely", "Sometimes", "Often", "Always"] },
+      { question: "How often have you laughed or found joy despite stress?", answers: ["Never", "Rarely", "Sometimes", "Often", "Always"] },
+      { question: "Have you felt supported by friends or family recently?", answers: ["Never", "Rarely", "Sometimes", "Often", "Always"] },
+      { question: "Do you intentionally take breaks to relax or reset your mind?", answers: ["Never", "Rarely", "Sometimes", "Often", "Always"] },
+      { question: "Have you felt proud of handling a tough situation recently?", answers: ["Never", "Rarely", "Sometimes", "Often", "Always"] }
+    ];
+
+    let currentIndex = 0;
+    const userAnswers = [];
+    const total = questions.length;
+
+    const questionContainer = document.getElementById("question-container");
+    const progressBar = document.getElementById("progress-bar");
+    const progressText = document.getElementById("progress-text");
+
+    function loadQuestion() {
+      const q = questions[currentIndex];
+      questionContainer.innerHTML = `
+        <div class="question-container transition-all">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">${q.question}</h2>
+          <div class="grid gap-3">
+            ${q.answers.map((ans, i) => `
+              <button class="answer-btn bg-gray-100 py-3 px-4 rounded-lg text-left text-gray-700 hover:shadow-md" data-index="${i}">${ans}</button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      document.querySelectorAll(".answer-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const selected = parseInt(btn.getAttribute("data-index"));
+          userAnswers.push(selected);
+          currentIndex++;
+          if (currentIndex < total) {
+            updateProgress();
+            loadQuestion();
+          } else {
+            showResult();
+          }
+        });
+      });
+    }
+
+    function updateProgress() {
+      const percent = (currentIndex / total) * 100;
+      progressBar.style.width = `${percent}%`;
+      progressText.textContent = `${Math.round(percent)}%`;
+    }
+
+    function calculateScore() {
+      return userAnswers.reduce((sum, val) => sum + val, 0);
+    }
+
+    function showResult() {
+      const score = calculateScore();
+      const maxScore = total * 4;
+      let message = "";
+      let suggestion = "";
+
+      if (score <= 8) {
+        message = "😌 You are relaxed and managing well!";
+        suggestion = "You're doing great. Keep up your healthy habits!";
+      } else if (score <= 16) {
+        message = "🙂 You're moderately stressed. Take breaks!";
+        suggestion = "Try some self-care and mindfulness routines.";
+      } else if (score <= 24) {
+        message = "😟 You're feeling pressured. Reflect and reach out!";
+        suggestion = "Talk to someone, and consider guided relaxation.";
+      } else {
+        message = "😣 High stress detected. Consider seeking help.";
+        suggestion = "Connect with a counselor or support system soon.";
+      }
+
+      // ✅ Correct keys for the dashboard
+      localStorage.setItem("stress_result", `${score} / ${maxScore}`);
+      localStorage.setItem("stress_suggestion", suggestion);
+      const retestDate = new Date();
+      retestDate.setDate(retestDate.getDate() + 7);
+      localStorage.setItem("stress_date", retestDate.toISOString());
+
+      document.getElementById("result-text").innerHTML = `
+        <strong class="text-indigo-700 text-xl">Score: ${score} / ${maxScore}</strong><br>
+        <span class="text-gray-700 text-lg">${message}</span>
+      `;
+
+      document.getElementById("final-result-modal").classList.remove("hidden");
+    }
+
+    // Optional: Button handlers
+    document.getElementById("retry-btn").addEventListener("click", () => {
+      location.reload();
+    });
+
+    document.getElementById("dashboard-btn").addEventListener("click", () => {
+      window.location.href = "index.html"; // Adjust to your dashboard URL
+    });
+
+    document.getElementById("growth-btn").addEventListener("click", () => {
+      window.location.href = "growth.html"; // Adjust if needed
+    });
+
+    // Initialize
+    loadQuestion();
+  </script>
+</body>
+</html>
+
+

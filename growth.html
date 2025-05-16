@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Growth Report</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-pink-50 to-red-100 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="flex items-center justify-between bg-white shadow-md py-4 px-6 sticky top-0 z-50">
+    <div class="text-2xl font-bold text-pink-500">Calmoria</div>
+    <button onclick="window.location.href='summary.html'" class="ml-2 px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-400">Get Your Report⇢</button>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow p-6">
+    <h1 class="text-4xl font-bold text-center text-gray-800 mb-6">🧠 Your Mental Wellness Growth</h1>
+    <p class="text-center text-lg text-gray-600 mb-4">Here’s a personalized summary of your quiz results and recommendations.</p>
+
+    <!-- Email Section -->
+    <div class="mb-6 text-center" id="emailSection">
+      <input id="userEmail" type="email" placeholder="Enter your email to receive summary" class="px-4 py-2 rounded border border-gray-400 w-80"/>
+      <button onclick="sendEmail()" class="ml-2 px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-400">Send Email</button>
+    </div>
+
+    <!-- Empty Message -->
+    <div id="emptyMessage" class="text-center text-gray-500 text-lg italic mb-10 hidden">
+      You haven’t done any test yet.
+    </div>
+
+    <!-- Report Cards -->
+    <div id="reportCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Cards will be dynamically inserted here -->
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white text-center py-6 mt-12 border-t border-gray-200">
+    <p class="text-sm text-gray-600 mb-2">© 2025 Glitch. All Rights Reserved.</p>
+    <nav class="text-sm text-gray-500">
+      <a href="dashboard.html" class="hover:text-pink-500">About</a> |
+      <a href="#" class="hover:text-pink-500">Privacy</a> |
+      <a href="contact.html" class="hover:text-pink-500">Contact</a>
+    </nav>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    emailjs.init("7Bve4O9XzADDxR9r4");
+
+    const testKeys = [
+      "awareness", "facet", "revised", "scale", "emotion", "panas", "positive", "stress",
+      "beck", "disorder", "health", "compassion", "toronto", "insight", "mental", "being"
+    ];
+
+    const testNames = {
+      awareness: "Mindful Attention Awareness Scale (MAAS)",
+      facet: "Five Facet Mindfulness Questionnaire (FFMQ)",
+      revised: "CAMS-R (Cognitive and Affective Mindfulness Scale)",
+      scale: "Difficulties in Emotion Regulation Scale (DERS)",
+      emotion: "Emotion Regulation Questionnaire (ERQ)",
+      panas: "Positive and Negative Affect Schedule (PANAS)",
+      positive: "Positive Mental Health Scale (PMH)",
+      stress: "Perceived Stress Scale (PSS)",
+      beck: "Beck Depression Inventory (BDI)",
+      disorder: "Generalized Anxiety Disorder Scale (GAD-7)",
+      health: "Patient Health Questionnaire (PHQ-9)",
+      compassion: "Self-Compassion Scale (SCS)",
+      toronto: "Toronto Alexithymia Scale (TAS-20)",
+      insight: "Self-Reflection and Insight Scale (SRIS)",
+      mental: "Warwick-Edinburgh Mental Well-being Scale (WEMWBS)",
+      being: "WHO-5 Well-Being Index"
+    };
+
+    const reportContainer = document.getElementById('reportCards');
+    const emptyMessage = document.getElementById('emptyMessage');
+    let collectedReport = "";
+    let hasTests = false;
+
+    function escapeHTML(str) {
+      return str.replace(/[&<>"']/g, tag => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[tag]));
+    }
+
+    function formatDate(date) {
+      const d = new Date(date);
+      return d.toLocaleDateString('en-IN', {
+        day: 'numeric', month: 'short', year: 'numeric'
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      testKeys.forEach(key => {
+        const result = localStorage.getItem(`${key}_result`);
+        const suggestion = localStorage.getItem(`${key}_suggestion`);
+        const date = localStorage.getItem(`${key}_date`);
+
+        if (result && suggestion && date) {
+          hasTests = true;
+
+          const formattedDate = formatDate(date);
+          const name = testNames[key];
+
+          // Create card
+          const card = document.createElement("div");
+          card.className = "bg-white shadow-lg rounded-2xl p-6 border-t-4 border-pink-400";
+          card.innerHTML = `
+            <h2 class="text-xl font-semibold text-pink-400 mb-2">${name}</h2>
+            <p><span class="font-medium text-gray-700">Score / Status:</span> ${escapeHTML(result)}</p>
+            <p class="mt-2"><span class="font-medium text-gray-700">Suggested Habit Change:</span> ${escapeHTML(suggestion)}</p>
+            <p class="mt-2 text-sm text-gray-500">📅 Retest on: <span class="font-semibold">${formattedDate}</span></p>
+          `;
+          reportContainer.appendChild(card);
+
+          // Add to collected email content
+          collectedReport += `
+            <div style="margin-bottom: 16px;">
+              <strong>🔹 ${name}</strong><br/>
+              <strong>• Score:</strong> ${escapeHTML(result)}<br/>
+              <strong>• Suggestion:</strong> ${escapeHTML(suggestion)}<br/>
+              <strong>• Retest Date:</strong> ${formattedDate}
+            </div>
+          `;
+        }
+      });
+
+      if (!hasTests) {
+        emptyMessage.classList.remove("hidden");
+      }
+    });
+
+    function sendEmail() {
+      const email = document.getElementById('userEmail').value.trim();
+
+      if (!email || !email.includes("@")) {
+        alert("❗ Please enter a valid email address.");
+        return;
+      }
+
+      if (!hasTests || collectedReport.trim() === "") {
+        alert("⚠️ No completed tests available to send.");
+        return;
+      }
+
+      const templateParams = {
+        to_email: email,
+        message: collectedReport,
+        subject: "🧠 Your Mental Wellness Growth Report"
+      };
+
+      emailjs.send("service_y1u1nfm", "template_h6g0uxd", templateParams)
+        .then(() => {
+          alert("✅ Report sent successfully to " + email);
+        })
+        .catch(error => {
+          console.error("EmailJS error:", error);
+          alert("❌ Failed to send email. Please try again.");
+        });
+    }
+
+    function scrollToEmail() {
+      const emailSection = document.getElementById("emailSection");
+      emailSection.scrollIntoView({ behavior: "smooth" });
+    }
+  </script>
+</body>
+</html>

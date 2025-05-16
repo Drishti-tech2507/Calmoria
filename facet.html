@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mindfulness Quiz - FFMQ</title>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://images.unsplash.com/photo-1525097487452-6278ff080c31?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+      overflow-y: auto;
+    }
+    .about-section {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      max-width: 800px;
+      margin-bottom: 2rem;
+    }
+    .quiz-container {
+      background: #e89b9b;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background-color: #ff8585;
+      color: white;
+      font-size: 16px;
+      margin: 10px 5px 0;
+      cursor: pointer;
+    }
+    .options button {
+      display: block;
+      margin: 10px auto;
+      background: #ececec;
+      color: #333;
+      font-size: 16px;
+      padding: 12px;
+    }
+    .progress {
+      height: 10px;
+      width: 100%;
+      background: #ddd;
+      margin-top: 20px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background-color: #9be8a5;
+      width: 0%;
+      transition: width 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <audio id="ambientAudio" loop>
+    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_7f2f83b6b7.mp3" type="audio/mp3">
+    Your browser does not support the audio tag.
+  </audio>
+
+  <div class="about-section">
+    <h2>About the FFMQ</h2>
+    <p>The Five Facet Mindfulness Questionnaire (FFMQ) assesses five key dimensions of mindfulness:</p>
+    <ul>
+      <li><strong>Observing:</strong> Noticing internal and external experiences.</li>
+      <li><strong>Describing:</strong> Labeling internal experiences with words.</li>
+      <li><strong>Acting with Awareness:</strong> Attending to one’s activities of the moment.</li>
+      <li><strong>Non-Judging of Inner Experience:</strong> Taking a non-evaluative stance toward thoughts and feelings.</li>
+      <li><strong>Non-Reactivity to Inner Experience:</strong> Allowing thoughts and feelings to come and go, without getting caught up in or carried away by them.</li>
+    </ul>
+    <p>Take this short quiz to learn how mindful you are across these areas. The average score reflects your current tendencies and can be a helpful guide to areas for personal growth and self-awareness.</p>
+  </div>
+
+  <div class="quiz-container" id="quizBox">
+    <h2 id="question">Welcome to the FFMQ Test!</h2>
+    <p id="instruction">Test your five facets of mindfulness. Click below to begin!</p>
+    <div class="options" id="options"></div>
+    <button id="startBtn">Start Quiz</button>
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const questions = [
+        "I perceive my feelings and emotions without having to react to them.",
+        "I pay attention to physical experiences, such as the wind in my hair or sun on my face.",
+        "I'm good at finding the words to describe my feelings.",
+        "I criticize myself for having irrational or inappropriate emotions.",
+        "When I'm walking, I deliberately notice the sensations of my body moving.",
+        "I'm easily distracted.",
+        "I believe some of my thoughts are inappropriate and shouldn't be expressed.",
+        "When I have distressing thoughts or images, I try to shut them out.",
+        "I notice the smells and aromas of things.",
+        "When I’m feeling distressed, I step back and observe my emotions without getting carried away.",
+        "I notice how foods and drinks affect my thoughts, bodily sensations, and emotions.",
+        "I tend to evaluate whether my perceptions are right or wrong.",
+        "I pay attention to sensations, such as the wind in my hair or sun on my face.",
+        "When I have distressing thoughts or images, I just notice them and let them go.",
+        "I’m good at thinking about how I feel."
+      ];
+
+      const choices = [
+        "😞 Never or very rarely true",
+        "😐 Rarely true",
+        "😌 Sometimes true",
+        "😊 Often true",
+        "🌟 Very often or always true"
+      ];
+
+      const scores = [];
+      let index = 0;
+
+      const startBtn = document.getElementById("startBtn");
+      const questionEl = document.getElementById("question");
+      const instruction = document.getElementById("instruction");
+      const optionsDiv = document.getElementById("options");
+      const progressBar = document.getElementById("progressBar");
+
+      startBtn.addEventListener("click", () => {
+        document.getElementById("ambientAudio").play();
+        startBtn.style.display = "none";
+        instruction.style.display = "none";
+        loadQuestion();
+      });
+
+      function loadQuestion() {
+        questionEl.textContent = `Q${index + 1}. ${questions[index]}`;
+        optionsDiv.innerHTML = "";
+
+        choices.forEach((choice, i) => {
+          const btn = document.createElement("button");
+          btn.textContent = choice;
+          btn.onclick = () => selectOption(i + 1);
+          optionsDiv.appendChild(btn);
+        });
+
+        progressBar.style.width = `${(index / questions.length) * 100}%`;
+      }
+
+      function selectOption(score) {
+        scores.push(score);
+        index++;
+
+        if (index < questions.length) {
+          loadQuestion();
+        } else {
+          showResult();
+        }
+      }
+
+      function showResult() {
+        const totalScore = scores.reduce((a, b) => a + b, 0);
+        const avg = (totalScore / scores.length).toFixed(2);
+
+        let feedback = "";
+        if (avg <= 2) feedback = "Your mindfulness skills could benefit from development.";
+        else if (avg <= 4) feedback = "You have a moderate level of mindfulness.";
+        else feedback = "You're highly mindful across multiple dimensions!";
+
+        // Save results to localStorage
+        localStorage.setItem("facet_result", `${avg} / 5`);
+        localStorage.setItem("facet_suggestion", feedback);
+
+        const retestDate = new Date();
+        retestDate.setDate(retestDate.getDate() + 7);
+        localStorage.setItem("facet_date", retestDate.toISOString());
+
+        questionEl.textContent = "Your FFMQ Report";
+        optionsDiv.innerHTML = `
+          <h3>Average Score: ${avg} / 5</h3>
+          <p>${feedback}</p>
+        `;
+
+        const restartBtn = document.createElement("button");
+        restartBtn.textContent = "Restart Quiz";
+        restartBtn.onclick = () => location.reload();
+        optionsDiv.appendChild(restartBtn);
+
+        const backBtn = document.createElement("button");
+        backBtn.textContent = "Back";
+        backBtn.onclick = () => window.history.back();
+        optionsDiv.appendChild(backBtn);
+
+        progressBar.style.width = `100%`;
+      }
+    });
+  </script>
+</body>
+</html>

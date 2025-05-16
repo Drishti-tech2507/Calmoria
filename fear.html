@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calmoria - Fear</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(to right, #667eea, #764ba2);
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      overflow: hidden;
+    }
+    .circle {
+      width: 160px;
+      height: 160px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      animation: pulse 5s infinite ease-in-out;
+      margin-bottom: 20px;
+    }
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+      }
+      50% {
+        transform: scale(1.4);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body class="flex flex-col justify-center items-center min-h-screen text-center px-6">
+  <audio autoplay loop>
+    <source src="fear-153680.mp3" type="audio/mp3" />
+    Your browser does not support the audio element.
+  </audio>
+
+  <h1 class="text-4xl font-bold mb-4">Calm Your Fear</h1>
+  <div class="circle"></div>
+  <p class="text-xl animate-pulse">Inhale Confidence... Exhale Fear</p>
+  <p class="mt-6 text-sm max-w-md">You are safe. Focus on your breath and feel grounded. Let the fear pass like a cloud in the sky.</p>
+
+  <script>
+    function speakSequence(texts, index = 0) {
+      if (index >= texts.length) {
+        setTimeout(() => speakSequence(texts, 0), 1000); // loop with pause
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(texts[index].text);
+      utterance.lang = 'en-US';
+      utterance.pitch = 1.2;
+      utterance.rate = 0.6; // slow
+      utterance.volume = 1;
+      const voices = speechSynthesis.getVoices();
+      const chosenVoice = voices.find(v => v.name.includes("Female") || v.name.includes("Google"));
+      if (chosenVoice) utterance.voice = chosenVoice;
+
+      utterance.onend = () => {
+        setTimeout(() => speakSequence(texts, index + 1), texts[index].delayAfter || 500);
+      };
+
+      speechSynthesis.speak(utterance);
+    }
+
+    window.addEventListener('load', () => {
+      const breathingTexts = [
+        { text: "BREATHE IN", delayAfter: 1200 },
+        { text: "1", delayAfter: 800 },
+        { text: "2", delayAfter: 800 },
+        { text: "3", delayAfter: 800 },
+        { text: "4", delayAfter: 800 },
+        { text: "HOLD", delayAfter: 1500 },
+        { text: "BREATHE OUT", delayAfter: 1200 },
+        { text: "1", delayAfter: 1000 },
+        { text: "2", delayAfter: 1000 },
+        { text: "3", delayAfter: 1000 },
+        { text: "4", delayAfter: 1000 },
+        { text: "5", delayAfter: 1500 }
+      ];
+
+      if (speechSynthesis.getVoices().length > 0) {
+        setTimeout(() => speakSequence(breathingTexts), 3000);
+      } else {
+        speechSynthesis.onvoiceschanged = () => {
+          setTimeout(() => speakSequence(breathingTexts), 3000);
+        };
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WHO-5 Well-being Index - Calmoria</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-tr from-yellow-50 to-pink-100 text-gray-800 min-h-screen flex flex-col">
+
+  <!-- Background Audio -->
+  <audio id="bg-music" loop autoplay>
+    <source src="meditation-music-sound-bite-339735.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Header -->
+  <header class="w-full bg-white shadow py-4 px-6 flex justify-between items-center">
+    <h1 class="text-xl font-bold text-pink-600">WHO-5 Well-being Index</h1>
+    <div class="flex items-center gap-3">
+      <button onclick="goToDashboard()" class="bg-pink-500 text-white px-4 py-1.5 rounded hover:bg-pink-600">Back to Dashboard</button>
+      <button onclick="toggleMusic()" class="border border-pink-400 text-pink-600 px-3 py-1.5 rounded hover:bg-pink-500 hover:text-white">Toggle Music</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-3xl w-full mx-auto p-6 mt-6 bg-white rounded-lg shadow-md">
+    <div id="question-box" class="space-y-6"></div>
+
+    <div class="mt-8">
+      <div class="flex justify-between text-sm text-pink-600 mb-1">
+        <span>Progress</span>
+        <span id="progress-text">0%</span>
+      </div>
+      <div class="w-full bg-pink-200 rounded-full h-2.5">
+        <div id="progress-bar" class="bg-pink-500 h-2.5 rounded-full" style="width: 0%;"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal -->
+  <div id="result-modal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg w-full max-w-md text-center shadow-xl">
+      <h2 class="text-xl font-bold text-pink-600 mb-4">Your WHO-5 Score</h2>
+      <p id="result-text" class="mb-4">Calculating...</p>
+      <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5350522/" target="_blank" class="text-pink-600 underline text-sm block mb-4">Learn more about WHO-5 interpretation</a>
+      <div class="flex justify-center gap-4">
+        <button onclick="restartTest()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Restart</button>
+        <button onclick="goToDashboard()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Dashboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script>
+    const questions = [
+      "I have felt cheerful and in good spirits.",
+      "I have felt calm and relaxed.",
+      "I have felt active and vigorous.",
+      "I woke up feeling fresh and rested.",
+      "My daily life has been filled with things that interest me."
+    ];
+
+    const options = [
+      { text: "At no time", score: 0 },
+      { text: "Some of the time", score: 1 },
+      { text: "Less than half the time", score: 2 },
+      { text: "More than half the time", score: 3 },
+      { text: "Most of the time", score: 4 },
+      { text: "All of the time", score: 5 }
+    ];
+
+    let currentIndex = 0;
+    let scores = [];
+
+    function loadQuestion() {
+      const box = document.getElementById("question-box");
+      const q = questions[currentIndex];
+      box.innerHTML = `
+        <h2 class="text-lg font-semibold">Q${currentIndex + 1}. ${q}</h2>
+        <div class="space-y-3">
+          ${options.map(opt => `
+            <button onclick="selectAnswer(${opt.score})" class="w-full border border-pink-400 px-4 py-2 rounded hover:bg-pink-500 hover:text-white transition">${opt.text}</button>
+          `).join('')}
+        </div>
+      `;
+      updateProgress();
+    }
+
+    function selectAnswer(score) {
+      scores.push(score);
+      currentIndex++;
+      if (currentIndex < questions.length) {
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function updateProgress() {
+      const progress = (currentIndex / questions.length) * 100;
+      document.getElementById("progress-bar").style.width = `${progress}%`;
+      document.getElementById("progress-text").innerText = `${Math.round(progress)}%`;
+    }
+
+    function showResults() {
+      const total = scores.reduce((a, b) => a + b, 0) * 4; // Scaled to 0–100
+      let message = total >= 50 ? "Good well-being" : "Poor well-being, consider seeking support";
+      document.getElementById("result-text").innerText = `Your score is ${total}. ${message}.`;
+      document.getElementById("result-modal").classList.remove("hidden");
+
+      // Save to localStorage
+      const retestDate = new Date();
+      retestDate.setDate(retestDate.getDate() + 7);
+      const formattedDate = retestDate.toISOString();
+
+      localStorage.setItem("being_result", total.toString());
+      localStorage.setItem("being_suggestion", message);
+      localStorage.setItem("being_date", formattedDate);
+    }
+
+    function restartTest() {
+      currentIndex = 0;
+      scores = [];
+      document.getElementById("result-modal").classList.add("hidden");
+      loadQuestion();
+    }
+
+    function goToDashboard() {
+      window.location.href = "dashboard.html";
+    }
+
+    function toggleMusic() {
+      const music = document.getElementById("bg-music");
+      if (music.paused) music.play();
+      else music.pause();
+    }
+
+    window.onload = loadQuestion;
+  </script>
+</body>
+</html>
+

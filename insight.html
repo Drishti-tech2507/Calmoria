@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SRIS Test</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .btn-selected {
+      background-color: #047857 !important;
+      color: white !important;
+    }
+  </style>
+</head>
+
+<body class="flex items-center justify-center min-h-screen backdrop-blur-sm">
+  <div class="bg-white bg-opacity-70 p-8 rounded-2xl shadow-lg max-w-2xl w-full">
+    <div id="intro" class="text-center">
+      <h1 class="text-3xl font-bold text-green-800 mb-4">🔍 SRIS Test</h1>
+      <p class="text-lg text-gray-700 mb-6">The Self-Reflection and Insight Scale (SRIS) helps you understand how much you reflect on your thoughts and behaviors. 🧠✨</p>
+      <button onclick="startTest()" class="bg-green-600 text-white px-6 py-2 rounded-full text-lg hover:bg-green-700">Start Test 🚀</button>
+    </div>
+
+    <div id="quiz" class="hidden">
+      <h2 class="text-xl font-semibold mb-4" id="questionText">Question Text</h2>
+      <div id="options" class="grid grid-cols-2 gap-4 mb-4"></div>
+
+      <div class="flex justify-between items-center mt-4">
+        <span class="text-sm text-gray-600">Progress</span>
+        <span class="text-sm text-gray-600" id="progressPercent">0%</span>
+      </div>
+      <div class="w-full bg-gray-200 h-2 rounded-full mb-4">
+        <div id="progressBar" class="bg-green-600 h-2 rounded-full" style="width: 0%"></div>
+      </div>
+
+      <div class="flex justify-between">
+        <button onclick="backToDashboard()" class="bg-gray-400 text-white px-4 py-2 rounded-lg">Back to Dashboard</button>
+        <button onclick="nextQuestion()" class="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700">Next ➡️</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      "I frequently take time to reflect on my thoughts.",
+      "I often contemplate the reasons for my behavior.",
+      "I understand my feelings well.",
+      "I think about my thoughts more than most people.",
+      "I examine my motives regularly.",
+      "I am aware of my weaknesses.",
+      "I enjoy analyzing my behaviors.",
+      "I have insight into my emotional triggers.",
+      "I often ask myself why I do the things I do.",
+      "I can describe my personality traits.",
+      "I explore how past experiences shape my actions.",
+      "I learn from reflecting on my mistakes.",
+      "I know what situations cause me stress.",
+      "I reflect before making big decisions.",
+      "I understand the impact of my emotions on my behavior."
+    ];
+
+    const options = ["Almost Never 😕", "Rarely 🙂", "Sometimes 😊", "Often 😃", "Almost Always 😄"];
+    let currentQuestion = 0;
+    let selectedOptions = [];
+
+    function startTest() {
+      document.getElementById("intro").classList.add("hidden");
+      document.getElementById("quiz").classList.remove("hidden");
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const qText = document.getElementById("questionText");
+      const optionsContainer = document.getElementById("options");
+      qText.innerHTML = `${currentQuestion + 1}. ${questions[currentQuestion]} 🌟`;
+      optionsContainer.innerHTML = "";
+      options.forEach((opt, index) => {
+        const btn = document.createElement("button");
+        btn.className = `bg-green-100 px-4 py-2 rounded-lg font-semibold hover:bg-green-200`;
+        btn.innerText = opt;
+        btn.onclick = () => {
+          selectedOptions[currentQuestion] = index;
+          Array.from(optionsContainer.children).forEach(child => child.classList.remove("btn-selected"));
+          btn.classList.add("btn-selected");
+        };
+        optionsContainer.appendChild(btn);
+      });
+      updateProgress();
+    }
+
+    function nextQuestion() {
+  if (selectedOptions[currentQuestion] === undefined) {
+    alert("Please select an option first!");
+    return;
+  }
+
+  currentQuestion++;
+
+  if (currentQuestion < questions.length) {
+    loadQuestion();
+  } else {
+    // Calculate total score
+    const totalScore = selectedOptions.reduce((acc, val) => acc + val, 0);
+
+    // Generate suggestion based on total score (range: 0 to 60)
+    let result = "";
+    if (totalScore <= 20) {
+      result = "Low Insight: You may benefit from more self-reflection.";
+    } else if (totalScore <= 40) {
+      result = "Moderate Insight: You reflect sometimes, keep it up!";
+    } else {
+      result = "High Insight: You have a strong understanding of yourself!";
+    }
+
+    // Save values in localStorage
+    localStorage.setItem("insight_result", totalScore);
+    localStorage.setItem("insight_suggestion", result);
+
+    const retestDate = new Date();
+    retestDate.setDate(retestDate.getDate() + 7);
+    localStorage.setItem("insight_date", retestDate.toISOString());
+
+    alert(`🎉 SRIS Test Completed!\n\nScore: ${totalScore}/60\n${result}`);
+    backToDashboard();
+  }
+}
+
+
+    function updateProgress() {
+      const percent = Math.round((currentQuestion / questions.length) * 100);
+      document.getElementById("progressBar").style.width = `${percent}%`;
+      document.getElementById("progressPercent").innerText = `${percent}%`;
+    }
+
+    const viewGrowthBtn = document.createElement("button");
+    viewGrowthBtn.textContent = "View Growth Page";
+    viewGrowthBtn.onclick = () => window.location.href = "growth.html";
+    optionsDiv.appendChild(viewGrowthBtn);
+
+    function backToDashboard() {
+      window.location.href = "dashboard.html";
+    }
+  </script>
+</body>
+
+</html>

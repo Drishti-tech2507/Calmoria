@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calmoria</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&family=Roboto:wght@500&display=swap" rel="stylesheet" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: linear-gradient(to right, #f8cdda, #1d2b64);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Header */
+    .main-header {
+      width: 100%;
+      background: #fff;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 600;
+      color: #e89b9b;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    .nav-icon img {
+      width: 24px;
+      height: 24px;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .nav-icon:hover img {
+      transform: scale(1.2);
+    }
+
+    .nav-icon {
+      position: relative;
+      display: inline-block;
+    }
+
+    .nav-icon::after {
+      content: attr(data-label);
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #e89b9b;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .nav-icon:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(5px);
+    }
+
+    .login-btn {
+      padding: 8px 18px;
+      background: #e89b9b;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-left: 20px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .login-btn:hover {
+      background-color: #f8a6a6;
+    }
+
+    /* Quote Section */
+    .quote-section {
+      margin: 60px 20px 40px;
+      font-size: 32px;
+      text-align: center;
+      font-style: italic;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 900px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* About Section */
+    .about-section {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 60px 40px;
+      max-width: 1000px;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+      margin: 40px auto;
+      text-align: center;
+    }
+
+    .about-section h2 {
+      font-size: 32px;
+      color: #f8a6a6;
+      margin-bottom: 20px;
+    }
+
+    .about-section p {
+      font-size: 18px;
+      color: #444;
+      line-height: 1.7;
+    }
+
+    /* Buttons */
+    .buttons-container {
+      margin-top: 30px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .action-btn {
+      padding: 14px 28px;
+      background-color: #e89b9b;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transition: background 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .action-btn:hover {
+      background-color: #f8a6a6;
+    }
+
+    /* Cards */
+    .cards-container {
+      margin: 50px 0;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .card {
+      background: #fff;
+      width: 280px;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #e89bcb;
+      margin-bottom: 12px;
+    }
+
+    .card-description {
+      font-size: 16px;
+      color: #555;
+    }
+
+    /* Footer */
+    footer {
+      width: 100%;
+      padding: 20px 0;
+      text-align: center;
+      background-color: #ffffffcc;
+      font-size: 14px;
+      color: #666;
+      margin-top: 60px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header class="main-header">
+    <div class="logo">Calmoria</div>
+    <nav>
+      <ul>
+        <li><a href="#" class="nav-icon" data-label="Home"><img src="https://img.icons8.com/ios-filled/50/2c7a7b/home.png" alt="Home"></a></li>
+        <li><a href="#" class="nav-icon" data-label="Mindful Test"><img src="https://img.icons8.com/ios-filled/50/2c7a7b/brain.png" alt="Mindful Test"></a></li>
+        <li><a href="#" class="nav-icon" data-label="Suggestion"><img src="https://img.icons8.com/ios-filled/50/2c7a7b/idea.png" alt="Suggestion"></a></li>
+        <li><a href="#" class="nav-icon" data-label="Growth"><img src="https://img.icons8.com/ios-filled/50/2c7a7b/plant-under-sun.png" alt="Growth"></a></li>
+      </ul>
+    </nav>
+    <a href="login.html" class="login-btn">Login→</a>
+  </header>
+
+  <!-- Quote -->
+  <section class="quote-section">
+    "Healing is not linear, but every step forward matters."
+  </section>
+
+  <!-- About -->
+  <section class="about-section">
+    <h2>About Calmoria</h2>
+    <p>
+      Calmoria is a space for those seeking inner peace, mental clarity, and emotional wellness.
+      Through personalized mindfulness tools, emotional awareness practices, and growth tracking, 
+      we help you take small but impactful steps toward becoming your most resilient self. Our goal 
+      is to empower every individual with resources that encourage daily mindfulness and foster a 
+      more grounded, balanced life.
+    </p>
+    <div class="buttons-container">
+      <a href="signup.html" class="action-btn">Get Started→</a>
+    </div>
+  </section>
+
+  <!-- Cards -->
+  <section class="cards-container">
+    <div class="card">
+      <div class="card-title">Self-Awareness</div>
+      <div class="card-description">Understand your emotions better and build resilience.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Daily Mindfulness</div>
+      <div class="card-description">Practice mindful habits to nurture inner calm.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Positive Growth</div>
+      <div class="card-description">Set small goals for steady mental and emotional growth.</div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 Calmoria | Designed for mental wellness and growth.
+  </footer>
+
+  <!-- Small JS for showing alerts on nav-icon clicks -->
+  <script>
+    const navIcons = document.querySelectorAll('.nav-icon');
+    navIcons.forEach(icon => {
+      icon.addEventListener('click', (e) => {
+        e.preventDefault();
+        const label = icon.getAttribute('data-label');
+        alert(label);
+      });
+    });
+  </script>
+
+</body>
+</html>
+
+
