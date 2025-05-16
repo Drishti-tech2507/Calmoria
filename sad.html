@@ -5,15 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Calmoria - Sadness Relief</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css" />
   <style>
     body {
       margin: 0;
       padding: 0;
       background: linear-gradient(to top right, #a1c4fd, #c2e9fb);
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       overflow: hidden;
       color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      position: relative;
     }
 
     .fade-in {
@@ -23,9 +30,11 @@
     .breath-circle {
       width: 180px;
       height: 180px;
-      background-color: #bbdefb;
+      background: radial-gradient(circle at center, #bbdefb, #90caf9);
       border-radius: 50%;
       animation: breathe 6s ease-in-out infinite;
+      box-shadow: 0 0 15px #90caf9aa;
+      margin: 0 auto 1.5rem;
     }
 
     @keyframes breathe {
@@ -40,21 +49,70 @@
     }
 
     .background-img {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      opacity: 0.25;
+      z-index: -1;
+      filter: brightness(0.85);
+      user-select: none;
+      pointer-events: none;
+    }
+
+    header {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.25;
-      z-index: -1;
+      background: rgba(255 255 255 / 0.9);
+      padding: 1rem 1.5rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      z-index: 10;
+    }
+
+    header h1 {
+      color: #2563eb; /* Tailwind blue-600 */
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+
+    main {
+      max-width: 450px;
+      margin-top: 6rem;
+      padding: 0 1rem;
+    }
+
+    ul li {
+      list-style: none;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    ul li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #2563eb;
+      font-weight: bold;
+      font-size: 1.5rem;
+      line-height: 1;
+      top: 50%;
+      transform: translateY(-50%);
     }
   </style>
 </head>
-<body class="flex flex-col items-center justify-center h-screen text-center relative">
+<body>
 
   <!-- Background Image -->
-  <img src="https://images.unsplash.com/photo-1525286116112-b59af11adad1" alt="calm background" class="background-img" />
+  <img
+    src="https://images.unsplash.com/photo-1525286116112-b59af11adad1?auto=format&fit=crop&w=1470&q=80"
+    alt="Calm background"
+    class="background-img"
+    draggable="false"
+  />
 
   <!-- Audio -->
   <audio autoplay loop>
@@ -63,17 +121,17 @@
   </audio>
 
   <!-- Header -->
-  <header class="absolute top-0 left-0 w-full bg-white bg-opacity-90 py-4 px-6 shadow-md">
-    <h1 class="text-2xl font-bold text-blue-600">Calmoria - Sadness Relief</h1>
+  <header>
+    <h1>Calmoria - Sadness Relief</h1>
   </header>
 
   <!-- Main Content -->
-  <main class="mt-20">
-    <div class="breath-circle mx-auto mb-6"></div>
-    <h2 class="text-2xl md:text-3xl font-semibold mb-4 fade-in">You are not alone. Breathe with me 💙</h2>
+  <main>
+    <div class="breath-circle" aria-hidden="true"></div>
+    <h2 class="text-2xl md:text-3xl font-semibold mb-4 fade-in" aria-live="polite">You are not alone. Breathe with me 💙</h2>
     <p class="text-lg mb-5">Let the sadness flow away like water...</p>
-    <p class="text-xl font-bold text-blue-800">🌦️ Emotional Soothing Exercise</p>
-    <ul class="mt-6 space-y-3 text-left max-w-md mx-auto text-lg">
+    <p class="text-xl font-bold text-blue-800 mb-4">🌦️ Emotional Soothing Exercise</p>
+    <ul class="space-y-3 text-left text-lg">
       <li>💧 Find a quiet, safe space</li>
       <li>🌬️ Inhale gently through your nose for 4 seconds</li>
       <li>🫁 Hold your breath for 5 seconds</li>
