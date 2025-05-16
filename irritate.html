@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Calmoria - Irritation Relief</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css" />
   <style>
     body {
       margin: 0;
@@ -27,6 +27,7 @@
       border-radius: 50%;
       animation: pulse 6s ease-in-out infinite;
       margin: auto;
+      box-shadow: 0 0 15px 3px rgba(255, 204, 203, 0.7);
     }
 
     @keyframes pulse {
@@ -41,7 +42,7 @@
     }
 
     .background-img {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
@@ -50,9 +51,20 @@
       opacity: 0.15;
       z-index: -1;
     }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255 255 255 / 0.9);
+      padding: 1rem 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 10;
+    }
   </style>
 </head>
-<body class="flex flex-col items-center justify-center h-screen text-center relative">
+<body class="flex flex-col items-center justify-center h-screen text-center relative px-4">
 
   <!-- Background Image -->
   <img src="https://images.unsplash.com/photo-1502086223501-7ea6ecd79368" alt="peaceful beach" class="background-img" />
@@ -64,16 +76,16 @@
   </audio>
 
   <!-- Header -->
-  <header class="absolute top-0 left-0 w-full bg-white bg-opacity-90 py-4 px-6 shadow-md">
+  <header>
     <h1 class="text-2xl font-bold text-red-500">Calmoria - Irritation Relief</h1>
   </header>
 
-  <!-- Main Section -->
-  <main class="mt-24 px-4">
+  <!-- Main Content -->
+  <main class="mt-24 max-w-lg w-full">
     <div class="pulse-circle mb-6"></div>
-    <h2 class="text-3xl md:text-4xl font-bold fade-text">Breathe it out 🧘‍♂️</h2>
-    <p class="text-lg mt-4 mb-2">Here's a soothing way to handle irritation:</p>
-    <ul class="mt-4 space-y-2 text-left max-w-md mx-auto text-lg">
+    <h2 class="text-3xl md:text-4xl font-bold fade-text mb-4">Breathe it out 🧘‍♂️</h2>
+    <p class="text-lg mb-4">Here's a soothing way to handle irritation:</p>
+    <ul class="space-y-3 text-left text-lg list-disc list-inside">
       <li>🌬️ Take a slow deep breath in for 4 seconds</li>
       <li>🫁 Hold it for 4 seconds</li>
       <li>💨 Exhale for 6 seconds</li>
@@ -84,7 +96,7 @@
   </main>
 
   <script>
-    // Lower volume of background music for voice clarity
+    // Lower background music volume for better clarity
     const bgMusic = document.querySelector('audio');
     if (bgMusic) bgMusic.volume = 0.3;
 
@@ -97,8 +109,9 @@
       const utterance = new SpeechSynthesisUtterance(texts[index].text);
       utterance.lang = 'en-US';
       utterance.pitch = 1.2;
-      utterance.rate = 0.6; // slow
+      utterance.rate = 0.6; // slow and calming
       utterance.volume = 1;
+
       const voices = speechSynthesis.getVoices();
       const chosenVoice = voices.find(v => v.name.includes("Female") || v.name.includes("Google"));
       if (chosenVoice) utterance.voice = chosenVoice;
