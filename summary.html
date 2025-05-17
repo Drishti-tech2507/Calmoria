@@ -2,80 +2,167 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Contact Calmoria</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calmoria Query Form</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
   <style>
-    @keyframes floatUpDown {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      animation: fadeIn 1.5s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
-    .float-emoji {
-      animation: floatUpDown 4s ease-in-out infinite;
-      font-size: 2.5rem;
-      user-select: none;
-      pointer-events: none;
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
     }
-    .float-emoji:nth-child(2) {
-      animation-delay: 1.2s;
-      font-size: 3rem;
+
+    .container {
+      background: rgba(255, 255, 255, 0.9);
+      max-width: 400px;
+      margin: 100px auto 40px;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      animation: slideIn 1.2s ease;
     }
-    .float-emoji:nth-child(3) {
-      animation-delay: 0.7s;
-      font-size: 2rem;
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-40px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .success-msg {
+      color: green;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .error-msg {
+      color: red;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    footer {
+      background: rgba(255, 255, 255, 0.95);
+      text-align: center;
+      padding: 16px 0;
+      border-top: 1px solid #e5e7eb;
+      margin-top: auto;
+    }
+
+    footer p {
+      font-size: 14px;
+      color: #4b5563;
+      margin: 0 0 6px;
+    }
+
+    footer nav a {
+      font-size: 14px;
+      color: #6b7280;
+      text-decoration: none;
+      margin: 0 6px;
+    }
+
+    footer nav a:hover {
+      color: #ec4899;
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-blue-100 to-green-100 min-h-screen flex flex-col">
+<body>
 
-  <div class="fixed inset-0 -z-10">
-    <img 
-      src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80" 
-      alt="Peaceful nature" 
-      class="w-full h-full object-cover opacity-60"
-    />
-  </div>
-
-  <header class="py-6 text-center text-4xl font-bold text-blue-700 drop-shadow-lg">
-    Contact Calmoria
-  </header>
-
-  <div class="flex justify-center gap-10 mb-6">
-    <div class="float-emoji">🌿</div>
-    <div class="float-emoji">🕊️</div>
-    <div class="float-emoji">🌸</div>
-  </div>
-
-  <main class="flex-grow flex flex-col items-center justify-center px-6">
-    <form 
-      action="https://formsubmit.co/el/hukesu" 
-      method="POST"
-      class="space-y-4 w-full max-w-md bg-white p-6 rounded-lg shadow-lg"
-    >
-      <!-- Hidden Fields -->
-      <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_template" value="table">
-      <input type="hidden" name="_next" value="https://yourdomain.com/thankyou.html">
-
-      <!-- Form Inputs -->
-      <input type="text" name="name" placeholder="Your Name" required class="w-full border rounded px-3 py-2">
-      <input type="email" name="email" placeholder="Your Email" required class="w-full border rounded px-3 py-2">
-      <textarea name="message" placeholder="Write your message here..." required class="w-full border rounded px-3 py-2 h-32"></textarea>
-      
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-        Send
-      </button>
+  <div class="container">
+    <h2>Contact Calmoria</h2>
+    <form id="query-form">
+      <input type="text" name="user_name" placeholder="Your Name" required />
+      <input type="email" name="user_email" placeholder="Your Email" required />
+      <textarea name="message" rows="4" placeholder="Your Query" required></textarea>
+      <button type="submit">Send Query</button>
     </form>
+    <div id="response" class="success-msg"></div>
+  </div>
 
-    <div class="text-center text-gray-700 font-semibold text-lg space-y-2 mt-8">
-      <div>📞 Helpline: <span class="underline">7985825345</span></div>
-      <div>📧 Email us at: <span class="underline">calmoria25@gmail.com</span></div>
-    </div>
-  </main>
-
-  <footer class="text-center text-gray-600 py-6 mt-12">
-    © 2025 Glitch_team | Designed for mental wellness and growth.
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Glitch. All Rights Reserved.</p>
+    <nav>
+      <a href="dashboard.html">About</a> |
+      <a href="#">Privacy</a> |
+      <a href="contact.html">Contact</a>
+    </nav>
   </footer>
 
+  <script>
+    (function(){
+      emailjs.init("ZX06o-TzUJqLacI0P");
+    })();
+
+    document.getElementById("query-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const form = this;
+      const responseDiv = document.getElementById("response");
+
+      // First: send query to Calmoria team
+      emailjs.sendForm("service_8loiyty", "template_iny5vso", form)
+        .then(function() {
+          // Second: send auto-reply to user
+          return emailjs.sendForm("service_8loiyty", "template_46hptjc", form);
+        })
+        .then(function() {
+          responseDiv.textContent = "✅ Your query has been sent successfully!";
+          form.reset();
+        })
+        .catch(function(error) {
+          console.error("EmailJS Error:", error);
+          responseDiv.textContent = "❌ Failed to send your query. Please try again.";
+          responseDiv.classList.add("error-msg");
+        });
+    });
+  </script>
 </body>
 </html>
