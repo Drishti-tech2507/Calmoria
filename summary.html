@@ -2,167 +2,201 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Calmoria Query Form</title>
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
+  <title>Mental Health Summary Report</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     body {
+      font-family: Arial, sans-serif;
+      background-color: #f8fafc;
+      color: #111827;
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80');
-      background-size: cover;
-      background-position: center;
-      animation: fadeIn 1.5s ease-in-out;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+      padding: 0;
     }
-
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
-    }
-
-    .container {
-      background: rgba(255, 255, 255, 0.9);
-      max-width: 400px;
-      margin: 100px auto 40px;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
-      animation: slideIn 1.2s ease;
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateY(-40px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    h2 {
-      text-align: center;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
+    .report-container {
+      max-width: 850px;
+      margin: 2rem auto;
+      background: #fff;
+      padding: 2rem;
       border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #4CAF50;
+    .header {
+      background-color: #ec4899;
       color: white;
+      padding: 1rem 2rem;
+      border-radius: 8px 8px 0 0;
+    }
+    .section {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 1rem 0;
+    }
+    canvas {
+      max-width: 100%;
+      margin: 1rem 0;
+    }
+    .btn {
+      display: inline-block;
+      margin: 2rem auto;
+      background-color: #ec4899;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
       border: none;
-      font-size: 16px;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
-      transition: background-color 0.3s;
     }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    .success-msg {
-      color: green;
-      text-align: center;
-      margin-top: 15px;
-    }
-
-    .error-msg {
-      color: red;
-      text-align: center;
-      margin-top: 15px;
-    }
-
-    footer {
-      background: rgba(255, 255, 255, 0.95);
-      text-align: center;
-      padding: 16px 0;
-      border-top: 1px solid #e5e7eb;
-      margin-top: auto;
-    }
-
-    footer p {
-      font-size: 14px;
-      color: #4b5563;
-      margin: 0 0 6px;
-    }
-
-    footer nav a {
-      font-size: 14px;
-      color: #6b7280;
-      text-decoration: none;
-      margin: 0 6px;
-    }
-
-    footer nav a:hover {
-      color: #ec4899;
+    .page-break {
+      margin-bottom: 2rem;
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h2>Contact Calmoria</h2>
-    <form id="query-form">
-      <input type="text" name="user_name" placeholder="Your Name" required />
-      <input type="email" name="user_email" placeholder="Your Email" required />
-      <textarea name="message" rows="4" placeholder="Your Query" required></textarea>
-      <button type="submit">Send Query</button>
-    </form>
-    <div id="response" class="success-msg"></div>
+<div class="report-container" id="report">
+  <div class="header">
+    <h1>Calmoria Mental Health Report</h1>
+    <p id="userName">Name: </p>
+    <p id="userEmail">Email: </p>
+    <p id="userPhone">Phone: </p>
+    <p>Date: <span id="reportDate"></span></p>
   </div>
 
-  <!-- Footer -->
-  <footer>
-    <p>© 2025 Glitch. All Rights Reserved.</p>
-    <nav>
-      <a href="dashboard.html">About</a> |
-      <a href="#">Privacy</a> |
-      <a href="contact.html">Contact</a>
-    </nav>
-  </footer>
+  <div id="tests-container">
+    <!-- Test results will be injected here -->
+  </div>
+</div>
 
-  <script>
-    (function(){
-      emailjs.init("ZX06o-TzUJqLacI0P");
-    })();
+<center><button class="btn" onclick="downloadPDF()">Download Report</button></center>
 
-    document.getElementById("query-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-
-      const form = this;
-      const responseDiv = document.getElementById("response");
-
-      // First: send query to Calmoria team
-      emailjs.sendForm("service_8loiyty", "template_iny5vso", form)
-        .then(function() {
-          // Second: send auto-reply to user
-          return emailjs.sendForm("service_8loiyty", "template_46hptjc", form);
-        })
-        .then(function() {
-          responseDiv.textContent = "✅ Your query has been sent successfully!";
-          form.reset();
-        })
-        .catch(function(error) {
-          console.error("EmailJS Error:", error);
-          responseDiv.textContent = "❌ Failed to send your query. Please try again.";
-          responseDiv.classList.add("error-msg");
-        });
+<script>
+    const tests = {
+      awareness: "Mindful Attention Awareness Scale (MAAS)",
+      facet: "Five Facet Mindfulness Questionnaire (FFMQ)",
+      revised: "CAMS-R (Cognitive and Affective Mindfulness Scale)",
+      scale: "Difficulties in Emotion Regulation Scale (DERS)",
+      emotion: "Emotion Regulation Questionnaire (ERQ)",
+      panas: "Positive and Negative Affect Schedule (PANAS)",
+      positive: "Positive Mental Health Scale (PMH)",
+      stress: "Perceived Stress Scale (PSS)",
+      beck: "Beck Depression Inventory (BDI)",
+      disorder: "Generalized Anxiety Disorder Scale (GAD-7)",
+      health: "Patient Health Questionnaire (PHQ-9)",
+      compassion: "Self-Compassion Scale (SCS)",
+      toronto: "Toronto Alexithymia Scale (TAS-20)",
+      insight: "Self-Reflection and Insight Scale (SRIS)",
+      mental: "Warwick-Edinburgh Mental Well-being Scale (WEMWBS)",
+      being: "WHO-5 Well-Being Index"
+    };
+  
+    // Get or prompt user data
+    const userFromStorage = JSON.parse(localStorage.getItem("userinitial")) || {};
+    const name = prompt("Enter your full name:") || userFromStorage.name || "User";
+    const email = prompt("Enter your email address:") || userFromStorage.email || "Not Provided";
+    const phone = prompt("Enter your phone number:") || "Not Provided";
+  
+    document.getElementById("userName").textContent += name;
+    document.getElementById("userEmail").textContent += email;
+    document.getElementById("userPhone").textContent += phone;
+    document.getElementById("reportDate").textContent = new Date().toDateString();
+  
+    const container = document.getElementById("tests-container");
+  
+    Object.keys(tests).forEach((key, index) => {
+      const score = localStorage.getItem(`${key}_result`);
+      const suggestion = localStorage.getItem(`${key}_suggestion`);
+      const date = localStorage.getItem(`${key}_date`);
+  
+      if (score && suggestion && date) {
+        const section = document.createElement("div");
+        section.className = "section page-break";
+        section.innerHTML = `
+          <h2>${tests[key]}</h2>
+          <p><strong>Score:</strong> ${score}</p>
+          <p><strong>Suggestion:</strong> ${suggestion}</p>
+          <p><strong>Retest Date:</strong> ${date}</p>
+          <canvas id="chart-${index}" width="400" height="200"></canvas>
+        `;
+  
+        if (key === "panas") {
+          const positive = localStorage.getItem("panas_positive") || "N/A";
+          const negative = localStorage.getItem("panas_negative") || "N/A";
+          const extra = document.createElement("p");
+          extra.innerHTML = `<strong>Positive Mood:</strong> ${positive} | <strong>Negative Mood:</strong> ${negative}`;
+          section.appendChild(extra);
+        }
+  
+        container.appendChild(section);
+  
+        setTimeout(() => {
+          new Chart(document.getElementById(`chart-${index}`), {
+            type: "bar",
+            data: {
+              labels: ["Your Score"],
+              datasets: [{
+                label: "Score",
+                data: [parseFloat(score)],
+                backgroundColor: ["#ec4899"]
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: { display: false }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  suggestedMax: 100
+                }
+              }
+            }
+          });
+        }, 150 * index);
+      }
     });
+  
+    async function downloadPDF() {
+      const report = document.getElementById("report");
+  
+      await new Promise(resolve => setTimeout(resolve, 1000)); // wait for chart rendering
+  
+      const canvas = await html2canvas(report, {
+        scale: 2,
+        useCORS: true,
+        scrollY: -window.scrollY
+      });
+  
+      const imgData = canvas.toDataURL("image/png");
+  
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF("p", "mm", "a4");
+  
+      const pdfWidth = 210;
+      const pdfHeight = 297;
+  
+      const imgProps = pdf.getImageProperties(imgData);
+      const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  
+      let heightLeft = imgHeight;
+      let position = 0;
+  
+      // Add first page
+      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+      heightLeft -= pdfHeight;
+  
+      while (heightLeft > 0) {
+        position -= pdfHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+        heightLeft -= pdfHeight;
+      }
+  
+      pdf.save("Mental_Health_Report.pdf");
+    }
   </script>
+  
+
 </body>
 </html>
