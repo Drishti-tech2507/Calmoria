@@ -655,10 +655,23 @@ body.chat-open {
   <script>
     const name = localStorage.getItem("userName") || "User";
     const initial = name.charAt(0).toUpperCase();
-    document.getElementById("welcomeText").textContent = Welcome, ${name};
+    document.getElementById("welcomeText").textContent = `Welcome, ${name}`;
     document.getElementById("userInitial").textContent = initial;
-  
-  
+    const user = JSON.parse(localStorage.getItem('userinitial'));
+    const result = localStorage.getItem('pss_result');
+    const suggestion = localStorage.getItem('pss_suggestion');
+    const date = localStorage.getItem('pss_date');
+
+    fetch("http://localhost:5000/api/test", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+    userEmail: user.email,
+    type: "PSS",
+    score: result,
+    suggestion,
+    date
+      
     const storyForm = document.getElementById("storyForm");
    const storiesContainer = document.getElementById("storiesContainer");
 
