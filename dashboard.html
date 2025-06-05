@@ -370,77 +370,107 @@ body.chat-open {
 }
 
 .chat-button {
-    position: absolute;
-    bottom: 60px;
-    right: 20px;
-    z-index: 998;
-    background-color: var(--black);
-    color: white;
-    height: 80px;
-    width: 80px;
-    border-radius: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    img {
-        width: 50px;
-    }
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #f8a6a6;
+  color: white;
+  padding: 15px;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  z-index: 1001;
+  font-size: 20px;
+  transition: transform 0.3s ease;
+}
 
-    &:hover {
-        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    }
+.chat-button:hover {
+  transform: scale(1.1);
 }
 
 .chat-window {
-    * {
-        font-family: "Poppins", serif;
-    }
-    display: none;
-    background-color: white;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    border-radius: 20px;
-    position: absolute;
-    z-index: 999;
-    bottom: 60px;
-    right: 20px;
-    height: 600px;
-    width: 360px;
-    flex-direction: column;
-    justify-content: space-between;
+  display: none;
+  position: fixed;
+  bottom: 90px;
+  right: 30px;
+  width: 320px;
+  height: 420px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1001;
+}
 
+body.chat-open .chat-window {
+  display: flex;
+}
 
+.chat-header {
+  background-color: #e89b9b;
+  color: white;
+  padding: 12px 20px;
+  font-weight: bold;
+  font-size: 18px;
+}
 
+.chat-body {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  font-size: 14px;
+  background: #fefefe;
+}
 
-    .close {
-        border: none;
-        padding: 8px 0;
-        background-color: var(--black);
-        color: white;
-        border-radius: 20px 20px 0 0;
-        cursor: pointer;
-    }
+.chat-input {
+  display: flex;
+  border-top: 1px solid #eee;
+}
 
-    .chat {
-        flex: 1;
-        padding: 0 8px;
-        overflow-y: scroll;
+.chat-input input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  font-size: 14px;
+}
 
-        p {
-            border-radius: 20px;
-            width: 80%;
-            margin: 8px 0;
-            font-size: 16px;
-            padding: 16px;
-        }
-        div.model {
+.chat-input button {
+  background-color: #f8a6a6;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+ .close {
+  border: none;
+  padding: 8px 0;
+  background-color: var(--black);
+  color: white;
+  border-radius: 20px 20px 0 0;
+  cursor: pointer;
+}
 
-            p {
-                background-color: var(--grey);
-            }
-        }
+.chat {
+flex: 1;
+padding: 0 8px;
+overflow-y: scroll;
 
-        div.user {
+ p {
+ border-radius: 20px;
+ width: 80%;
+ margin: 8px 0;
+ font-size: 16px;
+ padding: 16px;
+}
+div.model {
+
+     p {
+       background-color: var(--grey);
+         }
+   }
+
+    div.user {
             display: flex;
             justify-content: flex-end;
             p {
@@ -793,7 +823,6 @@ document.querySelector(".chat-window button.close")
 .addEventListener("click", () => {
     document.querySelector("body").classList.remove("chat-open")
 });
-
   </script>
   <!-- Chatbot HTML -->
 
