@@ -161,6 +161,31 @@
     .login-btn:hover {
       background-color: #f8a6a6;
     }
+    /* Clean PNG icons */
+.icon-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
+  background: transparent;
+}
+
+/* Logout button style */
+.logout-btn {
+  padding: 6px 12px;
+  background-color: #f87171;
+  color: white;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #dc2626;
+}
+
 
     .quote-section {
       margin: 60px 20px 40px;
@@ -388,9 +413,10 @@
     </nav>
     <div class="flex items-center space-x-4">
       <span id="welcomeText" class="text-sm select-none"></span>
-       <a href="login.html" class="nav-icon" data-label="Logout" title="Logout">
-            <img src="log-out-6398176_1280.png" alt="Logout">
-          </a>
+       <a href="login.html" class="hover:scale-110 transition">
+        <img src="https://img.icons8.com/ios-filled/50/2c7a7b/logout-rounded.png" alt="Logout" class="icon-img">
+      </a>
+
       <div id="userInitial" class="w-8 h-8 rounded-full bg-pink-300 text-black flex items-center justify-center font-semibold select-none"></div>
     </div>
   </header>
