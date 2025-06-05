@@ -456,11 +456,12 @@
     document.getElementById("welcomeText").textContent = `Welcome, ${name}`;
     document.getElementById("userInitial").textContent = initial;
   
-  const storyForm = document.getElementById("storyForm");
-  const storiesContainer = document.getElementById("storiesContainer");
+  
+    const storyForm = document.getElementById("storyForm");
+   const storiesContainer = document.getElementById("storiesContainer");
 
   // Load existing stories from localStorage
-  window.addEventListener("DOMContentLoaded", () => {
+    window.addEventListener("DOMContentLoaded", () => {
     const savedStories = JSON.parse(localStorage.getItem("calmoriaStories")) || [];
     savedStories.forEach(({ name, story }) => addStoryCard(name, story));
   });
@@ -498,7 +499,6 @@
     existing.push({ name, story });
     localStorage.setItem("calmoriaStories", JSON.stringify(existing));
   }
-</script>
 
   </script>
 </body>
