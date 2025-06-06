@@ -651,20 +651,18 @@ body.chat-open {
     © 2025 Glitch_team | Designed for mental wellness and growth.
   </footer>
 
-  <!-- Script -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>More actions
-  <script>
+  <script>More actions
     const name = localStorage.getItem("userName") || "User";
     const initial = name.charAt(0).toUpperCase();
     document.getElementById("welcomeText").textContent = `Welcome, ${name}`;
     document.getElementById("userInitial").textContent = initial;
-
-
-    const storyForm = document.getElementById("storyForm");
-   const storiesContainer = document.getElementById("storiesContainer");
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script>
+  const storyForm = document.getElementById("storyForm");
+  const storiesContainer = document.getElementById("storiesContainer");
 
   // Load existing stories from localStorage
-    window.addEventListener("DOMContentLoaded", () => {
+  window.addEventListener("DOMContentLoaded", () => {
     const savedStories = JSON.parse(localStorage.getItem("calmoriaStories")) || [];
     savedStories.forEach(({ name, story }) => addStoryCard(name, story));
   });
@@ -675,7 +673,8 @@ body.chat-open {
     const name = document.getElementById("userName").value.trim();
     const story = document.getElementById("userStory").value.trim();
 
-    if (!name || !story) {alert("Please fill in both fields before submitting your story.");More actions
+    if (!name || !story) {
+      alert("Please fill in both fields before submitting your story.");
       return;
     }
 
@@ -694,11 +693,14 @@ body.chat-open {
     storiesContainer.appendChild(newCard);
 
     gsap.from(newCard, { opacity: 0, y: 30, duration: 0.6 });
-  }function saveStoryToLocal(name, story) {More actions
+  }
+
+  function saveStoryToLocal(name, story) {
     const existing = JSON.parse(localStorage.getItem("calmoriaStories")) || [];
     existing.push({ name, story });
     localStorage.setItem("calmoriaStories", JSON.stringify(existing));
   }
+</script>
 
   </script>
 
