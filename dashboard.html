@@ -567,12 +567,15 @@ body.chat-open {
     </nav>
     <div class="flex items-center space-x-4">
       <span id="welcomeText" class="text-sm select-none"></span>
+       <a href="login.html" class="hover:scale-110 transition">
+        <img src="https://img.icons8.com/ios-filled/50/2c7a7b/logout-rounded.png" alt="Logout" class="icon-img">
        <a href="login.html" class="nav-icon" data-label="Logout" title="Logout">
         <img src="https://img.icons8.com/ios-filled/50/2c7a7b/logout-rounded.png" alt="Logout">
       </a>
 
       <div id="userInitial" class="w-8 h-8 rounded-full bg-pink-300 text-black flex items-center justify-center font-semibold select-none"></div>
     </div>
+  </div>
   </header>
 
   <!-- Quote -->
@@ -651,27 +654,14 @@ body.chat-open {
   </footer>
 
   <!-- Script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>More actions
   <script>
     const name = localStorage.getItem("userName") || "User";
     const initial = name.charAt(0).toUpperCase();
     document.getElementById("welcomeText").textContent = `Welcome, ${name}`;
     document.getElementById("userInitial").textContent = initial;
-    const user = JSON.parse(localStorage.getItem('userinitial'));
-    const result = localStorage.getItem('pss_result');
-    const suggestion = localStorage.getItem('pss_suggestion');
-    const date = localStorage.getItem('pss_date');
 
-    fetch("http://localhost:5000/api/test", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-    userEmail: user.email,
-    type: "PSS",
-    score: result,
-    suggestion,
-    date
-    }
-      
+
     const storyForm = document.getElementById("storyForm");
    const storiesContainer = document.getElementById("storiesContainer");
 
@@ -687,8 +677,7 @@ body.chat-open {
     const name = document.getElementById("userName").value.trim();
     const story = document.getElementById("userStory").value.trim();
 
-    if (!name || !story) {
-      alert("Please fill in both fields before submitting your story.");
+    if (!name || !story) {alert("Please fill in both fields before submitting your story.");More actions
       return;
     }
 
@@ -700,24 +689,20 @@ body.chat-open {
   function addStoryCard(name, story) {
     const newCard = document.createElement("div");
     newCard.classList.add("card");
-    newCard.innerHTML = 
+    newCard.innerHTML = `
       <div class="card-title">${name}</div>
       <div class="card-description">“${story}”</div>
-    ;
+    `;
     storiesContainer.appendChild(newCard);
 
     gsap.from(newCard, { opacity: 0, y: 30, duration: 0.6 });
-  }
-
-  function saveStoryToLocal(name, story) {
+  }function saveStoryToLocal(name, story) {More actions
     const existing = JSON.parse(localStorage.getItem("calmoriaStories")) || [];
     existing.push({ name, story });
     localStorage.setItem("calmoriaStories", JSON.stringify(existing));
   }
 
-
   </script>
-
 
 </body>
 </html>
