@@ -446,49 +446,70 @@
     const result = localStorage.getItem('pss_result');
     const suggestion = localStorage.getItem('pss_suggestion');
     const date = localStorage.getItem('pss_date');
-    const storyForm = document.getElementById("storyForm");
-  const storiesContainer = document.getElementById("storiesContainer");
+    const BIN_ID = "684332a08a456b7966aa4386";  // Replace with actual Bin ID
+const API_KEY = "$2a$10$3OWuRnvCLkvNAFs4CEDTwubga9VhJOoVvf4nJ7ETAZtEEw2/pm0hK"; // Replace with your secret key
+const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
-  // Load existing stories from localStorage
-  window.addEventListener("DOMContentLoaded", () => {
-    const savedStories = JSON.parse(localStorage.getItem("calmoriaStories")) || [];
-    savedStories.forEach(({ name, story }) => addStoryCard(name, story));
-  });
-
-  storyForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const name = document.getElementById("userName").value.trim();
-    const story = document.getElementById("userStory").value.trim();
-
-    if (!name || !story) {
-      alert("Please fill in both fields before submitting your story.");
-      return;
+async function fetchStoriesFromServer() {
+  const res = await fetch(BIN_URL, {
+    headers: {
+      "X-Master-Key": API_KEY
     }
-
-    addStoryCard(name, story);
-    saveStoryToLocal(name, story);
-    storyForm.reset();
   });
+  const data = await res.json();
+  return data.record.stories || [];
+}
 
-  function addStoryCard(name, story) {
-    const newCard = document.createElement("div");
-    newCard.classList.add("card");
-    newCard.innerHTML = `
-      <div class="card-title">${name}</div>
-      <div class="card-description">“${story}”</div>
+async function saveStoryToServer(name, story) {
+  const existingStories = await fetchStoriesFromServer();
+  existingStories.push({ name, story, date: new Date().toLocaleString() });
+
+  await fetch(BIN_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Master-Key": API_KEY
+    },
+    body: JSON.stringify({ stories: existingStories })
+  });
+}
+
+// Render stories to page
+function displayStories(stories) {
+  const storyList = document.getElementById("story-list");
+  storyList.innerHTML = "";
+
+  stories.forEach(({ name, story, date }) => {
+    const div = document.createElement("div");
+    div.className = "bg-white p-4 rounded shadow";
+    div.innerHTML = `
+      <h3 class="text-lg font-semibold">${name}</h3>
+      <p class="text-gray-700">${story}</p>
+      <span class="text-xs text-gray-500">${date}</span>
     `;
-    storiesContainer.appendChild(newCard);
+    storyList.appendChild(div);
+  });
+}
 
-    gsap.from(newCard, { opacity: 0, y: 30, duration: 0.6 });
+// Load and render on page load
+window.addEventListener("DOMContentLoaded", async () => {
+  const stories = await fetchStoriesFromServer();
+  displayStories(stories);
+});
+
+// Handle form submit
+document.getElementById("storyForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const name = document.getElementById("nameInput").value.trim();
+  const story = document.getElementById("storyInput").value.trim();
+
+  if (name && story) {
+    await saveStoryToServer(name, story);
+    const stories = await fetchStoriesFromServer();
+    displayStories(stories);
+    document.getElementById("storyForm").reset();
   }
-
-  function saveStoryToLocal(name, story) {
-    const existing = JSON.parse(localStorage.getItem("calmoriaStories")) || [];
-    existing.push({ name, story });
-    localStorage.setItem("calmoriaStories", JSON.stringify(existing));
-  }
-
+});
 
     fetch("http://localhost:5000/api/test", {
     method: "POST",
