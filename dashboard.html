@@ -438,22 +438,42 @@
 
   <!-- Script -->
   <script>
+  window.addEventListener("DOMContentLoaded", () => {
+    // Welcome Text and User Initial
     const name = localStorage.getItem("userName") || "User";
     const initial = name.charAt(0).toUpperCase();
     document.getElementById("welcomeText").textContent = `Welcome, ${name}`;
     document.getElementById("userInitial").textContent = initial;
-    const user = JSON.parse(localStorage.getItem('userinitial'));
+
+    // PSS Result API (keep this as you had it)
+    const user = JSON.parse(localStorage.getItem('userinitial') || '{}');
     const result = localStorage.getItem('pss_result');
     const suggestion = localStorage.getItem('pss_suggestion');
     const date = localStorage.getItem('pss_date');
-      const storyForm = document.getElementById("storyForm");
-  const storiesContainer = document.getElementById("storiesContainer");
 
-  // Load existing stories from localStorage
-  window.addEventListener("DOMContentLoaded", () => {
+    if (user.email && result && suggestion && date) {
+      fetch("http://localhost:5000/api/test", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          userEmail: user.email,
+          type: "PSS",
+          score: result,
+          suggestion: suggestion,
+          date: date
+        })
+      });
+    }
+
+    // Load saved stories on page load
     const savedStories = JSON.parse(localStorage.getItem("calmoriaStories")) || [];
     savedStories.forEach(({ name, story }) => addStoryCard(name, story));
   });
+
+  const storyForm = document.getElementById("storyForm");
+  const storiesContainer = document.getElementById("storiesContainer");
 
   storyForm.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -480,7 +500,9 @@
     `;
     storiesContainer.appendChild(newCard);
 
-    gsap.from(newCard, { opacity: 0, y: 30, duration: 0.6 });
+    if (typeof gsap !== 'undefined') {
+      gsap.from(newCard, { opacity: 0, y: 30, duration: 0.6 });
+    }
   }
 
   function saveStoryToLocal(name, story) {
@@ -488,19 +510,7 @@
     existing.push({ name, story });
     localStorage.setItem("calmoriaStories", JSON.stringify(existing));
   }
+</script>
 
-    fetch("http://localhost:5000/api/test", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-    userEmail: user.email,
-    type: "PSS",
-    score: result,
-    suggestion,
-    date
-  })
-});
-
-  </script>
 </body>
 </html>
