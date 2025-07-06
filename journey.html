@@ -295,6 +295,55 @@
     Your browser does not support the video tag.
   </video>
 </section>
+  <button id="chatToggle" onclick="toggleChat()" class="fixed bottom-6 right-6 bg-[#52b788] hover:bg-[#40916c] text-white p-4 rounded-full shadow-xl z-50">
+    💬
+  </button>
+
+  <!-- Chat Window -->
+  <div id="chatWindow" class="hidden fixed bottom-20 right-6 w-[360px] bg-white shadow-xl border border-gray-200 rounded-xl overflow-hidden z-40">
+
+    <!-- Header -->
+    <div class="bg-[#c5f0dd] px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <img src="https://img.icons8.com/fluency/48/chatbot.png" class="w-6 h-6 mt-1" />
+        <span class="font-bold text-[#075e54]">Zeni</span>
+      </div>
+      <button onclick="toggleChat()">✖</button>
+    </div>
+
+    <!-- Info Banner -->
+    <div class="text-xs bg-gray-100 p-2 text-gray-600">
+      This chat session is recorded and may be monitored by Calmoria.
+    </div>
+
+    <!-- Chat Messages -->
+    <div id="chatLog" class="h-60 overflow-y-auto px-4 py-3 text-sm space-y-4">
+
+      <!-- Bot Greeting -->
+      <div class="flex items-start space-x-2">
+        <img src="https://img.icons8.com/fluency/48/chatbot.png" class="w-6 h-6 mt-1" />
+        <div class="bg-gray-100 px-3 py-2 rounded-xl">
+          👋 Hi there! How are you feeling today?
+        </div>
+      </div>
+
+      <!-- Options -->
+      <div class="flex flex-col space-y-2">
+        <button class="optionBtn">Are you feeling depressed?</button>
+        <button class="optionBtn">Are you feeling sad?</button>
+        <button class="optionBtn">Are you feeling low?</button>
+        <button class="optionBtn">Are you feeling anxious?</button>
+        <button class="optionBtn">Are you feeling lonely?</button>
+        <button class="optionBtn">Something else</button>
+        <button class="optionBtn">Contact team</button>
+      </div>
+    </div>
+
+    <!-- Chat Input -->
+    <div id="inputArea" class="hidden border-t border-gray-300 px-3 py-2 flex items-center space-x-2">
+      <input id="chatInput" type="text" placeholder="Tell us more..." class="flex-1 px-3 py-2 rounded-full border border-gray-300 text-sm focus:outline-none" />
+      <button onclick="sendChat()" class="text-xl">📤</button>
+    </div>
 
   <!-- Footer -->
   <footer>
