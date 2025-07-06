@@ -221,67 +221,7 @@
   margin-bottom: 20px;
   color: #333;
 }
-    .chat-icon {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    font-size: 30px;
-    cursor: pointer;
-    background-color: #5f9ea0;
-    padding: 10px;
-    border-radius: 50%;
-    color: white;
-    z-index: 1000;
-  }
-
-  .chat-box {
-    display: none;
-    flex-direction: column;
-    position: fixed;
-    bottom: 80px;
-    right: 20px;
-    width: 300px;
-    max-height: 400px;
-    border: 1px solid #ccc;
-    background: white;
-    box-shadow: 0 0 10px #ccc;
-    border-radius: 10px;
-    overflow: hidden;
-    z-index: 999;
-  }
-
-  .chat-header {
-    background-color: #5f9ea0;
-    color: white;
-    padding: 10px;
-    font-weight: bold;
-    text-align: center;
-  }
-
-  .chat-body {
-    padding: 10px;
-    overflow-y: auto;
-    flex-grow: 1;
-    font-family: sans-serif;
-  }
-
-  .chat-input {
-    display: flex;
-    gap: 5px;
-    padding: 10px;
-    border-top: 1px solid #ccc;
-  }
-
-  .chat-input input {
-    flex: 1;
-    padding: 5px;
-  }
-
-  .chat-input button {
-    padding: 5px 10px;
-    cursor: pointer;
-  }
-
+   
 
 
     /* Footer */
@@ -356,56 +296,6 @@
     Your browser does not support the video tag.
   </video>
 </section>
-  <button id="chatToggle" onclick="toggleChat()" class="fixed bottom-6 right-6 bg-[#52b788] hover:bg-[#40916c] text-white p-4 rounded-full shadow-xl z-50">
-    💬
-  </button>
-
-  <!-- Chat Window -->
-  <div id="chatWindow" class="hidden fixed bottom-20 right-6 w-[360px] bg-white shadow-xl border border-gray-200 rounded-xl overflow-hidden z-40">
-
-    <!-- Header -->
-    <div class="bg-[#c5f0dd] px-4 py-3 flex justify-between items-center">
-      <div class="flex items-center space-x-2">
-        <img src="https://img.icons8.com/fluency/48/chatbot.png" class="w-6 h-6 mt-1" />
-        <span class="font-bold text-[#075e54]">Zeni</span>
-      </div>
-      <button onclick="toggleChat()">✖</button>
-    </div>
-
-    <!-- Info Banner -->
-    <div class="text-xs bg-gray-100 p-2 text-gray-600">
-      This chat session is recorded and may be monitored by Calmoria.
-    </div>
-
-    <!-- Chat Messages -->
-    <div id="chatLog" class="h-60 overflow-y-auto px-4 py-3 text-sm space-y-4">
-
-      <!-- Bot Greeting -->
-      <div class="flex items-start space-x-2">
-        <img src="https://img.icons8.com/fluency/48/chatbot.png" class="w-6 h-6 mt-1" />
-        <div class="bg-gray-100 px-3 py-2 rounded-xl">
-          👋 Hi there! How are you feeling today?
-        </div>
-      </div>
-
-      <!-- Options -->
-      <div class="flex flex-col space-y-2">
-        <button class="optionBtn">Are you feeling depressed?</button>
-        <button class="optionBtn">Are you feeling sad?</button>
-        <button class="optionBtn">Are you feeling low?</button>
-        <button class="optionBtn">Are you feeling anxious?</button>
-        <button class="optionBtn">Are you feeling lonely?</button>
-        <button class="optionBtn">Something else</button>
-        <button class="optionBtn">Contact team</button>
-      </div>
-    </div>
-
-    <!-- Chat Input -->
-    <div id="inputArea" class="hidden border-t border-gray-300 px-3 py-2 flex items-center space-x-2">
-      <input id="chatInput" type="text" placeholder="Tell us more..." class="flex-1 px-3 py-2 rounded-full border border-gray-300 text-sm focus:outline-none" />
-      <button onclick="sendChat()" class="text-xl">📤</button>
-    </div>
-
   <!-- Footer -->
   <footer>
     © 2025 Calmoria | Designed for mental wellness and growth.
@@ -420,49 +310,12 @@
         const label = icon.getAttribute('data-label');
         alert(label);
       });
-      function toggleChat() {
-      document.getElementById("chatWindow").classList.toggle("hidden");
+  
     }
 
-    function sendChat(fromButton = false) {
-      const input = document.getElementById("chatInput");
-      const chatLog = document.getElementById("chatLog");
-      const msg = fromButton || input.value.trim();
-      if (!msg) return;
 
-      const userMsg = document.createElement("div");
-      userMsg.className = "flex justify-end";
-      userMsg.innerHTML = `<div class="bg-[#52b788] text-white px-3 py-2 rounded-xl max-w-xs">${msg}</div>`;
-      chatLog.appendChild(userMsg);
-      input.value = "";
-      chatLog.scrollTop = chatLog.scrollHeight;
 
-      let reply = "";
-      switch (msg) {
-        case "Are you feeling depressed?":
-          reply = "Just relax, calm down, take a sip of water, meditate, go for a walk, get some fresh air, and talk to family, friends, or someone close. 🌿";
-          break;
-        case "Are you feeling sad?":
-          reply = "Try the exercise for sadness from our suggestions and watch a comedy movie or funny video to lift your mood. 🎥";
-          break;
-        case "Are you feeling low?":
-          reply = "Don't feel low, we are here for you 💚 Everything will be alright. Just smile the way you do and be happy always!";
-          break;
-        case "Are you feeling anxious?":
-          reply = "Head to our suggestions and do the anxiety exercises twice. You’ll feel better. Also try a walk or a friendly chat. 🧘";
-          break;
-        case "Are you feeling lonely?":
-          reply = "Why feel lonely? We’re right here with you. Enjoy your solo time, smile, and remember everything gets easier. 🤗";
-          break;
-        case "Contact team":
-          reply = "📧 You can reach out to us via email: calmoria25@gmail.com. We'll respond to your concern shortly. Thank you!";
-          break;
-        case "Something else":
-          document.getElementById("inputArea").classList.remove("hidden");
-          return;
-        default:
-          reply = "Thank you for sharing. We're here with you, always 💙";
-      }
+      
 
       setTimeout(() => {
         const botReply = document.createElement("div");
