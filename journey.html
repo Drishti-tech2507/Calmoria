@@ -359,6 +359,67 @@
         const label = icon.getAttribute('data-label');
         alert(label);
       });
+      unction toggleChat() {
+      document.getElementById("chatWindow").classList.toggle("hidden");
+    }
+
+    function sendChat(fromButton = false) {
+      const input = document.getElementById("chatInput");
+      const chatLog = document.getElementById("chatLog");
+      const msg = fromButton || input.value.trim();
+      if (!msg) return;
+
+      const userMsg = document.createElement("div");
+      userMsg.className = "flex justify-end";
+      userMsg.innerHTML = `<div class="bg-[#52b788] text-white px-3 py-2 rounded-xl max-w-xs">${msg}</div>`;
+      chatLog.appendChild(userMsg);
+      input.value = "";
+      chatLog.scrollTop = chatLog.scrollHeight;
+
+      let reply = "";
+      switch (msg) {
+        case "Are you feeling depressed?":
+          reply = "Just relax, calm down, take a sip of water, meditate, go for a walk, get some fresh air, and talk to family, friends, or someone close. 🌿";
+          break;
+        case "Are you feeling sad?":
+          reply = "Try the exercise for sadness from our suggestions and watch a comedy movie or funny video to lift your mood. 🎥";
+          break;
+        case "Are you feeling low?":
+          reply = "Don't feel low, we are here for you 💚 Everything will be alright. Just smile the way you do and be happy always!";
+          break;
+        case "Are you feeling anxious?":
+          reply = "Head to our suggestions and do the anxiety exercises twice. You’ll feel better. Also try a walk or a friendly chat. 🧘";
+          break;
+        case "Are you feeling lonely?":
+          reply = "Why feel lonely? We’re right here with you. Enjoy your solo time, smile, and remember everything gets easier. 🤗";
+          break;
+        case "Contact team":
+          reply = "📧 You can reach out to us via email: calmoria25@gmail.com. We'll respond to your concern shortly. Thank you!";
+          break;
+        case "Something else":
+          document.getElementById("inputArea").classList.remove("hidden");
+          return;
+        default:
+          reply = "Thank you for sharing. We're here with you, always 💙";
+      }
+
+      setTimeout(() => {
+        const botReply = document.createElement("div");
+        botReply.className = "flex items-start space-x-2";
+        botReply.innerHTML = `
+        <img src="https://img.icons8.com/fluency/48/chatbot.png" class="w-6 h-6 mt-1" />
+          <div class="bg-gray-100 px-3 py-2 rounded-xl max-w-xs">${reply}</div>
+        `;
+        chatLog.appendChild(botReply);
+        chatLog.scrollTop = chatLog.scrollHeight;
+      }, 600);
+    }
+
+    // Handle button clicks
+    document.addEventListener("click", function(e) {
+      if (e.target.classList.contains("optionBtn")) {
+        sendChat(e.target.textContent);
+      }
     });
   </script>
 
