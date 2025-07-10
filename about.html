@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Mental Health Tests - Calmoria</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(to right, #e0c3fc, #8ec5fc);
+      color: #333;
+    }
+    .test-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body class="px-4 md:px-20 py-8">
+  <!-- Header -->
+  <header class="flex justify-between items-center mb-10 bg-white shadow-md p-4 rounded-xl">
+    <h1 class="text-2xl font-bold text-pink-600">Calmoria</h1>
+    <div class="flex gap-4 items-center">
+      <span id="username" class="text-sm text-gray-600"></span>
+      <a href="login.html" class="text-red-500 hover:text-red-700 text-sm">Logout</a>
+    </div>
+  </header>
+
+  <a href="dashboard.html" class="mb-6 inline-block bg-pink-400 text-white px-4 py-2 rounded-full shadow hover:bg-pink-500 transition">⬅ Back to Dashboard</a>
+
+  <h2 class="text-3xl font-bold text-center mb-10 text-gray-800">About the Tests</h2>
+
+  <div class="space-y-10">
+    <div class="test-card" data-aos="fade-up">
+      <h3 class="text-xl font-semibold text-pink-600 mb-2">Mindful Attention Awareness Scale (MAAS)</h3>
+      <p>This scale measures the presence or absence of attention to and awareness of what is occurring in the present. It helps assess mindfulness levels and the ability to stay grounded in the current moment.</p>
+    </div>
+
+    <div class="test-card" data-aos="fade-up">
+      <h3 class="text-xl font-semibold text-pink-600 mb-2">Five Facet Mindfulness Questionnaire (FFMQ)</h3>
+      <p>FFMQ assesses five key components of mindfulness: observing, describing, acting with awareness, non-judging of inner experience, and non-reactivity to inner experience. It's used to evaluate a person's mindfulness traits and tendencies.</p>
+    </div>
+
+    <div class="test-card" data-aos="fade-up">
+      <h3 class="text-xl font-semibold text-pink-600 mb-2">Cognitive and Affective Mindfulness Scale-Revised (CAMS-R)</h3>
+      <p>This test evaluates mindfulness as a multifaceted construct involving attention, awareness, present-focus, and acceptance/nonjudgment. It provides insights into one's mental clarity and emotional regulation.</p>
+    </div>
+
+    <div class="test-card" data-aos="fade-up">
+      <h3 class="text-xl font-semibold text-pink-600 mb-2">Difficulties in Emotion Regulation Scale (DERS)</h3>
+      <p>DERS measures a person's ability to identify, understand, and manage emotions. It is widely used to assess issues like impulsivity and emotional dysregulation.</p>
+    </div>
+
+    <div class="test-card" data-aos="fade-up">
+      <h3 class="text-xl font-semibold text-pink-600 mb-2">Emotion Regulation Questionnaire (ERQ)</h3>
+      <p>This questionnaire evaluates strategies individuals use to regulate their emotions, specifically focusing on cognitive reappraisal and expressive suppression.</p>
+    </div>
+
+    <div class="test-card" data-aos="fade-up">
+      <h3 class="text-xl font-semibold text-pink-600 mb-2">Positive and Negative Affect Schedule (PANAS)</h3>
+      <p>PANAS assesses mood states by capturing the extent of positive and negative emotions experienced over a specified time period, helping track mood swings and emotional balance.</p>
+    </div>
+
+    <div class="test-card" data-aos="fade-up">
+      <h3 class="text-xl font-semibold text-pink-600 mb-2">Perceived Stress Scale (PSS)</h3>
+      <p>This scale measures the perception of stress, reflecting how unpredictable, uncontrollable, and overloaded respondents find their lives. It's a classic stress assessment tool.</p>
+    </div>
+
+    <div class="test-card" data-aos="fade-up">
+      <h3 class="text-xl font-semibold text-pink-600 mb-2">Beck Depression Inventory (BDI)</h3>
+      <p>BDI is one of the most widely used tools to assess the severity of depression. It explores mood, feelings of guilt, thoughts of suicide, and changes in sleep patterns and appetite.</p>
+    </div>
+
+    <div class="test-card" data-aos="fade-up">
+      <h3 class="text-xl font-semibold text-pink-600 mb-2">Generalized Anxiety Disorder Scale (GAD-7)</h3>
+      <p>The GAD-7 is a screening tool that identifies whether a person suffers from generalized anxiety disorder and to what degree, based on common anxiety symptoms.</p>
+    </div>
+
+    <div class="test-card" data-aos="fade-up">
+      <h3 class="text-xl font-semibold text-pink-600 mb-2">Patient Health Questionnaire (PHQ-9)</h3>
+      <p>This 9-question tool screens for the presence and severity of depression. It’s commonly used in primary care settings for quick mental health checks.</p>
+    </div>
+
+    <div class="test-card" data-aos="fade-up">
+      <h3 class="text-xl font-semibold text-pink-600 mb-2">Self-Compassion Scale (SCS)</h3>
+      <p>This scale assesses how people treat themselves in difficult times. It focuses on self-kindness, mindfulness, and a sense of shared humanity during emotional struggles.</p>
+    </div>
+
+    <div class="test-card" data-aos="fade-up">
+      <h3 class="text-xl font-semibold text-pink-600 mb-2">Toronto Alexithymia Scale (TAS-20)</h3>
+      <p>TAS-20 evaluates alexithymia — a condition characterized by difficulty identifying and describing feelings. It's useful for understanding emotional insight.</p>
+    </div>
+
+    <div class="test-card" data-aos="fade-up">
+      <h3 class="text-xl font-semibold text-pink-600 mb-2">Self-Reflection and Insight Scale (SRIS)</h3>
+      <p>SRIS measures personal insight and reflection capabilities, encouraging individuals to evaluate their thoughts, behaviors, and motivations.</p>
+    </div>
+
+    <div class="test-card" data-aos="fade-up">
+      <h3 class="text-xl font-semibold text-pink-600 mb-2">Warwick-Edinburgh Mental Well-being Scale (WEMWBS)</h3>
+      <p>WEMWBS measures positive aspects of mental health, including optimism, energy, clear thinking, and social relationships.</p>
+    </div>
+
+    <div class="test-card" data-aos="fade-up">
+      <h3 class="text-xl font-semibold text-pink-600 mb-2">WHO-5 Well-Being Index</h3>
+      <p>This is a short 5-item questionnaire measuring current mental well-being and is often used as a depression screening tool.</p>
+    </div>
+  </div>
+
+  <script>
+    AOS.init();
+    const name = localStorage.getItem("userName") || "User";
+    document.getElementById("username").textContent = `Welcome, ${name}`;
+  </script>
+</body>
+</html>

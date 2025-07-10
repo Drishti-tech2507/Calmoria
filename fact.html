@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Myths vs Facts - Calmoria</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(270deg, #fbc2eb, #a6c1ee, #fcd5ce, #caffbf);
+      background-size: 800% 800%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .typing-text {
+      overflow: hidden;
+      border-right: .15em solid #000;
+      white-space: nowrap;
+      margin: 0 auto;
+      letter-spacing: .05em;
+      animation: typing 2.5s steps(40, end), blink .75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent }
+    }
+
+    .flip-card {
+      background-color: transparent;
+      width: 280px;
+      height: 200px;
+      perspective: 1000px;
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+    }
+
+    .flip-card:hover .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .flip-card-front {
+      background: linear-gradient(135deg, #ffe0f0, #ffcfd2);
+      color: #333;
+    }
+
+    .flip-card-back {
+      background: linear-gradient(135deg, #d4fc79, #96e6a1);
+      color: #0a4d3c;
+      transform: rotateY(180deg);
+    }
+
+    .header {
+      background-color: #ffffffcc;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .logout-icon {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+    }
+
+    .back-btn {
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center text-gray-800">
+
+  <!-- Header -->
+  <header class="header w-full flex justify-between items-center px-6 py-4 sticky top-0 z-50">
+    <div class="text-xl font-semibold text-pink-600">Calmoria</div>
+    <div class="flex items-center space-x-4">
+      <span id="userNameText" class="text-sm font-medium"></span>
+      <a href="login.html" title="Logout">
+        <img src="https://img.icons8.com/ios-filled/50/2c7a7b/logout-rounded.png" class="logout-icon" alt="Logout">
+      </a>
+    </div>
+  </header>
+
+  <!-- Title -->
+  <h1 class="text-3xl md:text-4xl font-semibold text-center mt-10 typing-text">
+    🧠 <span>Myths vs Facts about Mental Health</span>
+  </h1>
+
+  <!-- Flip Cards -->
+  <div class="flex flex-wrap justify-center gap-6 mt-12 px-4">
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <p><strong>Myth:</strong><br> Mental health problems are rare.</p>
+        </div>
+        <div class="flip-card-back">
+          <p><strong>Fact:</strong><br> 1 in 5 people experience mental illness each year.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <p><strong>Myth:</strong><br> Only weak people have mental health issues.</p>
+        </div>
+        <div class="flip-card-back">
+          <p><strong>Fact:</strong><br> Mental health affects all people, regardless of strength.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <p><strong>Myth:</strong><br> Talking about your feelings makes you weak.</p>
+        </div>
+        <div class="flip-card-back">
+          <p><strong>Fact:</strong><br> Sharing feelings is a sign of strength and self-awareness.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <p><strong>Myth:</strong><br> Children don't experience mental health problems.</p>
+        </div>
+        <div class="flip-card-back">
+          <p><strong>Fact:</strong><br> Kids can face anxiety, trauma, and emotional stress too.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <p><strong>Myth:</strong><br> People with mental illness can’t recover.</p>
+        </div>
+        <div class="flip-card-back">
+          <p><strong>Fact:</strong><br> With support and treatment, recovery is absolutely possible.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Back Button -->
+  <a href="dashboard.html" class="back-btn bg-pink-500 hover:bg-pink-600 text-white font-medium py-2 px-6 rounded-full transition mt-10">
+    ⬅ Back to Dashboard
+  </a>
+
+  <script>
+    // Show username from localStorage
+    const username = localStorage.getItem("userName") || "User";
+    document.getElementById("userNameText").textContent = `Welcome, ${username}`;
+  </script>
+</body>
+</html>

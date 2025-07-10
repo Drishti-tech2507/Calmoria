@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Awareness Quiz - Calmoria</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+    .typing {
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 2px solid #333;
+      animation: typing 2s steps(30) forwards;
+      width: 0;
+    }
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 1s ease-in-out 2s forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-rose-100 to-indigo-200 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white shadow-md px-6 py-4 flex justify-between items-center sticky top-0 z-50">
+    <div class="text-xl font-bold text-rose-400 font-sans">Calmoria</div>
+    <div class="flex items-center space-x-4">
+      <span id="userNameDisplay" class="text-sm font-medium text-gray-700"></span>
+      <a href="login.html" title="Logout">
+        <img src="https://img.icons8.com/ios-filled/24/2c7a7b/logout-rounded.png" class="w-6 h-6" alt="Logout">
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow flex items-center justify-center px-4">
+    <div class="bg-white p-8 rounded-xl shadow-xl w-full max-w-md text-center space-y-6">
+      <h1 class="text-2xl font-bold text-gray-700 typing">Hey, how are you feeling today?</h1>
+
+      <div class="fade-in">
+        <input id="moodInput" type="text" placeholder="e.g., low, anxious, lonely..." class="w-full mt-4 px-4 py-2 border rounded-lg focus:outline-none shadow" />
+        <button onclick="analyzeMood()" class="mt-4 bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-full transition">
+          Let’s Begin
+        </button>
+        <p id="message" class="text-sm mt-4 text-gray-600 font-medium"></p>
+        <!-- Back to Dashboard -->
+        <a href="dashboard.html" class="inline-block mt-6 text-indigo-600 hover:text-indigo-800 font-semibold text-sm">
+          ← Back to Dashboard
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Insert user name from localStorage
+    const storedName = localStorage.getItem("userName") || "User";
+    document.getElementById("userNameDisplay").textContent = `Welcome, ${storedName}`;
+
+    // Mood-to-test map
+    const moodMap = {
+      sad: {
+        test: "beck.html",
+        message: "You might be feeling signs of depression. Let’s take a quick check using the Beck Depression Inventory."
+      },
+      depressed: {
+        test: "beck.html",
+        message: "You may be going through a depressive phase. Let's understand it better with the BDI Test."
+      },
+      low: {
+        test: "compassion.html",
+        message: "You might be feeling emotionally low. A Self-Compassion test can help you reflect."
+      },
+      anxious: {
+        test: "disorder.html",
+        message: "You seem anxious. Let's assess this using the GAD-7 Anxiety Test."
+      },
+      stress: {
+        test: "stress.html",
+        message: "You mentioned stress. Let's take the Perceived Stress Scale (PSS) to evaluate it."
+      },
+      confused: {
+        test: "toronto.html",
+        message: "You may be emotionally confused. Let’s check this using the Toronto Alexithymia Scale."
+      },
+      mindful: {
+        test: "facet.html",
+        message: "Want to assess your mindfulness? Let’s try the Five Facet Mindfulness Questionnaire."
+      },
+      lonely: {
+        test: "mental.html",
+        message: "You’re feeling lonely. This could affect mental wellbeing. Let's take a quick test to check how you're doing."
+      },
+      unwell: {
+        test: "health.html",
+        message: "You might not be feeling emotionally healthy. Let’s do the PHQ-9 test to get clarity."
+      },
+      angry: {
+        test: "scale.html",
+        message: "Struggling to regulate emotions? The DERS test might help you understand your emotional control."
+      },
+      curious: {
+        test: "insight.html",
+        message: "Let’s explore your self-awareness using the Self-Reflection and Insight Scale."
+      },
+      happy: {
+        test: "being.html",
+        message: "Great! Let's check your mental wellbeing with the WHO-5 Well-Being Index."
+      }
+    };
+
+    function analyzeMood() {
+      const input = document.getElementById("moodInput").value.trim().toLowerCase();
+      const msgBox = document.getElementById("message");
+
+      const matched = Object.keys(moodMap).find(key => input.includes(key));
+
+      if (matched) {
+        const { test, message } = moodMap[matched];
+        msgBox.textContent = message;
+
+        setTimeout(() => {
+          window.location.href = test;
+        }, 3000);
+      } else {
+        msgBox.textContent = "We couldn't detect your mood. Try words like: sad, anxious, stressed, lonely, confused, etc.";
+      }
+    }
+  </script>
+</body>
+</html>
