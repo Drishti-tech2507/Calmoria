@@ -13,6 +13,10 @@
       box-sizing: border-box;
     }
 
+    html, body {
+      height: 100%;
+    }
+
     body {
       font-family: 'Open Sans', sans-serif;
       background: linear-gradient(to right, #f8cdda, #1d2b64);
@@ -20,9 +24,20 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      animation: fadeInBody 1.5s ease-in;
     }
 
-    /* Header */
+    @keyframes fadeInBody {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .main-header {
       width: 100%;
       background: #fff;
@@ -88,7 +103,8 @@
       transform: translateX(-50%) translateY(5px);
     }
 
-    .login-btn {
+    .login-btn,
+    .action-btn {
       padding: 8px 18px;
       background: #e89b9b;
       color: white;
@@ -96,17 +112,18 @@
       border-radius: 25px;
       font-size: 14px;
       cursor: pointer;
-      transition: background 0.3s ease;
-      margin-left: 20px;
+      transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
       text-decoration: none;
       display: inline-block;
     }
 
-    .login-btn:hover {
+    .login-btn:hover,
+    .action-btn:hover {
       background-color: #f8a6a6;
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     }
 
-    /* Quote Section */
     .quote-section {
       margin: 60px 20px 40px;
       font-size: 32px;
@@ -119,7 +136,6 @@
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
     }
 
-    /* About Section */
     .about-section {
       background: rgba(255, 255, 255, 0.95);
       padding: 60px 40px;
@@ -142,7 +158,6 @@
       line-height: 1.7;
     }
 
-    /* Buttons */
     .buttons-container {
       margin-top: 30px;
       display: flex;
@@ -150,25 +165,6 @@
       justify-content: center;
     }
 
-    .action-btn {
-      padding: 14px 28px;
-      background-color: #e89b9b;
-      color: white;
-      border: none;
-      border-radius: 30px;
-      font-size: 16px;
-      cursor: pointer;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      transition: background 0.3s ease;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    .action-btn:hover {
-      background-color: #f8a6a6;
-    }
-
-    /* Cards */
     .cards-container {
       margin: 50px 0;
       display: flex;
@@ -184,12 +180,14 @@
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
       text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease;
     }
 
-    .card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .card-title {
@@ -203,28 +201,34 @@
       font-size: 16px;
       color: #555;
     }
+
     .video-demo {
-  background: #fff;
-  padding: 40px;
-  border-radius: 12px;
-  margin: 40px auto;
-  max-width: 800px;
-  text-align: center;
-}
+      background: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      margin: 40px auto;
+      max-width: 800px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
+    }
 
-.video-demo h2 {
-  color: #e88c8c;
-  margin-bottom: 10px;
-}
+    .video-demo.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-.video-demo p {
-  margin-bottom: 20px;
-  color: #333;
-}
-   
+    .video-demo h2 {
+      color: #e88c8c;
+      margin-bottom: 10px;
+    }
 
+    .video-demo p {
+      margin-bottom: 20px;
+      color: #333;
+    }
 
-    /* Footer */
     footer {
       width: 100%;
       padding: 20px 0;
@@ -236,10 +240,7 @@
     }
   </style>
 </head>
-
 <body>
-
-  <!-- Header -->
   <header class="main-header">
     <div class="logo">Calmoria</div>
     <nav>
@@ -253,27 +254,22 @@
     <a href="login.html" class="login-btn">Login→</a>
   </header>
 
-  <!-- Quote -->
-  <section class="quote-section">
-    "Healing is not linear, but every step forward matters."
+  <section class="quote-section" id="quoteText">
+    <span id="typedQuote"></span>
   </section>
 
-  <!-- About -->
   <section class="about-section">
     <h2>About Calmoria</h2>
     <p>
       Calmoria is a space for those seeking inner peace, mental clarity, and emotional wellness.
       Through personalized mindfulness tools, emotional awareness practices, and growth tracking, 
-      we help you take small but impactful steps toward becoming your most resilient self. Our goal 
-      is to empower every individual with resources that encourage daily mindfulness and foster a 
-      more grounded, balanced life.
+      we help you take small but impactful steps toward becoming your most resilient self.
     </p>
     <div class="buttons-container">
       <a href="signup.html" class="action-btn">Get Started→</a>
     </div>
   </section>
 
-  <!-- Cards -->
   <section class="cards-container">
     <div class="card">
       <div class="card-title">Self-Awareness</div>
@@ -288,20 +284,20 @@
       <div class="card-description">Set small goals for steady mental and emotional growth.</div>
     </div>
   </section>
+
   <section class="video-demo">
-  <h2>How Calmoria Works</h2>
-  <p>Watch this quick walkthrough to understand how to sign in, take a test, and track your emotional wellness journey.</p>
-  <video controls width="100%" poster="Homepage.png">
-    <source src="THANKS FOR WATCHING (2).mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-</section>
-  <!-- Footer -->
+    <h2>How Calmoria Works</h2>
+    <p>Watch this quick walkthrough to understand how to sign in, take a test, and track your emotional wellness journey.</p>
+    <video controls width="100%" poster="Homepage.png">
+      <source src="THANKS FOR WATCHING (2).mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </section>
+
   <footer>
     © 2025 Calmoria | Designed for mental wellness and growth.
   </footer>
 
-  <!-- Small JS for showing alerts on nav-icon clicks -->
   <script>
     const navIcons = document.querySelectorAll('.nav-icon');
     navIcons.forEach(icon => {
@@ -310,33 +306,36 @@
         const label = icon.getAttribute('data-label');
         alert(label);
       });
-  
-    }
-
-
-
-      
-
-      setTimeout(() => {
-        const botReply = document.createElement("div");
-        botReply.className = "flex items-start space-x-2";
-        botReply.innerHTML = `
-        <img src="https://img.icons8.com/fluency/48/chatbot.png" class="w-6 h-6 mt-1" />
-          <div class="bg-gray-100 px-3 py-2 rounded-xl max-w-xs">${reply}</div>
-        `;
-        chatLog.appendChild(botReply);
-        chatLog.scrollTop = chatLog.scrollHeight;
-      }, 600);
-    }
-
-    // Handle button clicks
-    document.addEventListener("click", function(e) {
-      if (e.target.classList.contains("optionBtn")) {
-        sendChat(e.target.textContent);
-      }
     });
-  </script>
 
+    // Typing animation for quote
+    const quote = `"Healing is not linear, but every step forward matters."`;
+    let i = 0;
+    function typeQuote() {
+      if (i < quote.length) {
+        document.getElementById("typedQuote").innerHTML += quote.charAt(i);
+        i++;
+        setTimeout(typeQuote, 50);
+      }
+    }
+    window.onload = typeQuote;
+
+    // Scroll animations
+    const cards = document.querySelectorAll('.card');
+    const videoSection = document.querySelector('.video-demo');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    cards.forEach(card => observer.observe(card));
+    observer.observe(videoSection);
+  </script>
 </body>
 </html>
 
