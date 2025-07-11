@@ -10,31 +10,36 @@
 <body class="bg-gradient-to-br from-pink-50 to-red-100 min-h-screen flex flex-col">
 
   <!-- Header -->
-  <header class="flex items-center justify-between bg-white shadow-md py-4 px-6 sticky top-0 z-50">
-    <div class="text-2xl font-bold text-pink-500">Calmoria</div>
-    <button onclick="window.location.href='summary.html'" class="ml-2 px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-400">Get Your Report⇢</button>
+  <header class="bg-white shadow-md px-6 py-4 flex justify-between items-center sticky top-0 z-50">
+    <!-- Left: Calmoria Brand -->
+    <div style="font-size: 28px; font-weight: 600; color: #e89b9b; font-family: 'Roboto', sans-serif;">
+      Calmoria
+    </div>
+
+    <!-- Right: Username + Logout + Button -->
+    <div class="flex items-center space-x-4">
+      <button onclick="sendReportEmail()" class="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-400 transition">
+        Get Your Report ⇢
+      </button>
+      <span id="userNameDisplay" class="text-sm font-medium text-gray-700"></span>
+      <a href="login.html" title="Logout">
+        <img src="https://img.icons8.com/ios-filled/24/2c7a7b/logout-rounded.png" class="w-6 h-6" alt="Logout">
+      </a>
+    </div>
   </header>
 
-  <!-- Main Content -->
+  <!-- Main -->
   <main class="flex-grow p-6">
     <h1 class="text-4xl font-bold text-center text-gray-800 mb-6">🧠 Your Mental Wellness Growth</h1>
     <p class="text-center text-lg text-gray-600 mb-4">Here’s a personalized summary of your quiz results and recommendations.</p>
 
-    <!-- Email Section -->
-    <div class="mb-6 text-center" id="emailSection">
-      <input id="userEmail" type="email" placeholder="Enter your email to receive summary" class="px-4 py-2 rounded border border-gray-400 w-80"/>
-      <button onclick="sendEmail()" class="ml-2 px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-400">Send Email</button>
-    </div>
-
-    <!-- Empty Message -->
+    <!-- Empty message if no test taken -->
     <div id="emptyMessage" class="text-center text-gray-500 text-lg italic mb-10 hidden">
       You haven’t done any test yet.
     </div>
 
-    <!-- Report Cards -->
-    <div id="reportCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Cards will be dynamically inserted here -->
-    </div>
+    <!-- Cards -->
+    <div id="reportCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
   </main>
 
   <!-- Footer -->
@@ -47,9 +52,10 @@
     </nav>
   </footer>
 
-  <!-- Script -->
   <script>
-    emailjs.init("7Bve4O9XzADDxR9r4");
+    emailjs.init("7Bve4O9XzADDxR9r4"); // Replace with your EmailJS public key
+    const storedName = localStorage.getItem("userName") || "User";
+    document.getElementById("userNameDisplay").textContent = `Welcome, ${storedName}`;
 
     const testKeys = [
       "awareness", "facet", "revised", "scale", "emotion", "panas", "positive", "stress",
@@ -82,18 +88,15 @@
 
     function escapeHTML(str) {
       return str.replace(/[&<>"']/g, tag => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
       }[tag]));
     }
 
     function formatDate(date) {
       const d = new Date(date);
       return d.toLocaleDateString('en-IN', {
-        day: 'numeric', month: 'short', year: 'numeric'
+        day: 'numeric', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
       });
     }
 
@@ -105,7 +108,6 @@
 
         if (result && suggestion && date) {
           hasTests = true;
-
           const formattedDate = formatDate(date);
           const name = testNames[key];
 
@@ -120,14 +122,12 @@
           `;
           reportContainer.appendChild(card);
 
-          // Add to collected email content
+          // Add to email report
           collectedReport += `
-            <div style="margin-bottom: 16px;">
-              <strong>🔹 ${name}</strong><br/>
-              <strong>• Score:</strong> ${escapeHTML(result)}<br/>
-              <strong>• Suggestion:</strong> ${escapeHTML(suggestion)}<br/>
-              <strong>• Retest Date:</strong> ${formattedDate}
-            </div>
+            🔹 <b>${name}</b><br/>
+            • <b>Score:</b> ${escapeHTML(result)}<br/>
+            • <b>Suggestion:</b> ${escapeHTML(suggestion)}<br/>
+            • <b>Retest Date:</b> ${formattedDate}<br/><br/>
           `;
         }
       });
@@ -137,38 +137,35 @@
       }
     });
 
-    function sendEmail() {
-      const email = document.getElementById('userEmail').value.trim();
-
-      if (!email || !email.includes("@")) {
-        alert("❗ Please enter a valid email address.");
-        return;
-      }
-
+    function sendReportEmail() {
       if (!hasTests || collectedReport.trim() === "") {
         alert("⚠️ No completed tests available to send.");
         return;
       }
 
+      const email = prompt("📧 Enter your email to receive the report:");
+      if (!email || !email.includes("@")) {
+        alert("❗ Please enter a valid email address.");
+        return;
+      }
+
       const templateParams = {
         to_email: email,
-        message: collectedReport,
-        subject: "🧠 Your Mental Wellness Growth Report"
+        message: `
+          🧠 Thank you for completing your mental wellness tests, ${storedName}!<br/><br/>
+          Here is your personalized test report:<br/><br/>
+          ${collectedReport}
+          💡 Stay consistent with your habits and check back soon for retesting!
+        `,
+        subject: "Calmoria Report: Your Mental Wellness Summary"
       };
 
       emailjs.send("service_y1u1nfm", "template_h6g0uxd", templateParams)
-        .then(() => {
-          alert("✅ Report sent successfully to " + email);
-        })
+        .then(() => alert("✅ Report sent successfully to " + email))
         .catch(error => {
-          console.error("EmailJS error:", error);
-          alert("❌ Failed to send email. Please try again.");
+          console.error("EmailJS Error:", error);
+          alert("❌ Failed to send the report.");
         });
-    }
-
-    function scrollToEmail() {
-      const emailSection = document.getElementById("emailSection");
-      emailSection.scrollIntoView({ behavior: "smooth" });
     }
   </script>
 </body>
