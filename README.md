@@ -101,7 +101,7 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 🎓 BTech CSE | 💻 Cybersecurity & Design | 🎨 Graphic Designer
 
 **Suyash Srivastava**
-🎓 BTech CSE | 💻 Artificial Intelligence and Machine Learning 
+🎓 BTech CSE | 💻 Artificial Intelligence and Machine Learning | 🎨 Developer
 
 ---
 
