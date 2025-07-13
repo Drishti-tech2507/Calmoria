@@ -28,7 +28,6 @@ Calmoria is an emotionally intelligent, user-centric mental wellness web app tha
 ## 🚀 Live Demo
 
 🔗 [Visit Calmoria](https://drishti-tech2507.github.io/Calmoria/)
-*(Replace with your deployed link)*
 
 ---
 
