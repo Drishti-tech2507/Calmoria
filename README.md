@@ -1,4 +1,4 @@
-# 🧘 Calmoria - Your Digital Path to Mental Wellness
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/e4511aa0-2e16-4ae2-9168-71d5d8009551" /># 🧘 Calmoria - Your Digital Path to Mental Wellness
 
 Calmoria is an emotionally intelligent, user-centric mental wellness web app that helps users track, assess, and improve their mental well-being through scientifically validated tests, mindfulness tools, and AI-driven support.
 
@@ -102,6 +102,13 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 
 **Suyash Srivastava**
 🎓 BTech CSE | 💻 Artificial Intelligence and Machine Learning | 🎨 Developer
+
+**Trisha Rathod**
+🎓 BTech ECE | 💻 Artificial Intelligence and Cybernetics | 🎨 Graphic Designer 
+
+**Gauri Trivedi**
+🎓 BTech Aerospace  | 🎨 Graphic Designer & Researcher
+
 
 ---
 
