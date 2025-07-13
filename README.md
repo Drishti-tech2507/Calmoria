@@ -99,6 +99,8 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 ## 🧠 Built with compassion by  
 **Drishti Chopra**  
 🎓 BTech CSE | 💻 Cybersecurity & Design | 🎨 Graphic Designer
+**Suyash Srivastava**
+🎓 BTech CSE | 💻 Artificial Intelligence and Machine Learning 
 
 ---
 
