@@ -2,7 +2,7 @@
 
 Calmoria is an emotionally intelligent, user-centric mental wellness web app that helps users track, assess, and improve their mental well-being through scientifically validated tests, mindfulness tools, and AI-driven support.
 
-![Calmoria Logo](./assets/logo.png) <!-- Add your actual logo path here -->
+![Calmoria Logo]("C:\Users\suyas\OneDrive\Pictures\Screenshots\Screenshot 2025-07-13 111648.png") <!-- Add your actual logo path here -->
 
 ---
 
